@@ -8,6 +8,7 @@
     "serve": "gatsby serve"
   },
   "dependencies": {
+    "@types/graphql": "^0.13.1",
     "gatsby": "^1.9.250",
     "gatsby-link": "^1.6.40",
     "gatsby-plugin-typescript": "^1.4.20",
