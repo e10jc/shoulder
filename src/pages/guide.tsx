@@ -88,9 +88,9 @@ class GuidePage extends React.Component<Props, State> {
         {this.didFinishPersonalizingGuide() && (
           <Box>
             <Hero {...guideHero} />
-            <Flex>
-              <Box width={1 / 3}>Left</Box>
-              <Box width={2 / 3}>Right</Box>
+            <Flex flexWrap='wrap'>
+              <Box width={[1, 1 / 3]}>Left</Box>
+              <Box width={[1, 2 / 3]}>Right</Box>
             </Flex>
           </Box>
         )}
