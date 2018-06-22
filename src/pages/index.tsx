@@ -1,11 +1,13 @@
 import * as React from "react"
+import {Box} from 'rebass'
 
 import Hero from '../components/hero'
 
 const HomePage = ({data: {homeHero}}) => (
-  <div>
+  <Box>
     <Hero data={homeHero} />
-  </div>
+    <Box>Rest of homepage</Box>
+  </Box>
 )
 
 export default HomePage

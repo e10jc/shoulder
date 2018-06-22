@@ -3,6 +3,6 @@ import {Box} from 'rebass'
 
 export default () => (
   <Box>
-    this is the guide
+    this is the community
   </Box>
 )

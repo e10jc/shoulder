@@ -1,5 +1,6 @@
 import Link from 'gatsby-link'
 import * as React from 'react'
+import {Box, Button, Heading, Text} from 'rebass'
 
 interface Props {
   data: {
@@ -11,15 +12,15 @@ interface Props {
 }
 
 const Hero = ({data: {title, body: {body}, linkTitle, linkUrl}}: Props) => (
-  <div>
-    <h1>{title}</h1>
-    <div>{body}</div>
+  <Box bg='darkGray' color='white' p={4}>
+    <Heading mb={1}>{title}</Heading>
+    <Text mb={3}>{body}</Text>
     {linkTitle && linkUrl && (
       <Link to={linkUrl}>
-        <button>{linkTitle}</button>
+        <Button bg='white' color='purple'>{linkTitle}</Button>
       </Link>
     )}
-  </div>
+  </Box>
 )
 
 export default Hero
