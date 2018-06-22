@@ -14,6 +14,7 @@ const theme = {
 }
 
 injectGlobal`
+  a { text-decoration: none }
   html, body { margin: 0 }
 `
 
