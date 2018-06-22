@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {Provider} from 'rebass'
+import {injectGlobal} from 'styled-components'
 
 import Header from '../components/header'
 
@@ -11,6 +12,10 @@ const theme = {
     red: '#FF565C',
   }
 }
+
+injectGlobal`
+  html, body { margin: 0 }
+`
 
 export default ({children}) => (
   <Provider theme={theme}>
