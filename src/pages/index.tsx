@@ -1,11 +1,17 @@
 import * as React from "react"
 import {Box} from 'rebass'
 
-import Hero from '../components/hero'
+import Hero, {Props as HeroProps} from '../components/hero'
 
-const HomePage = ({data: {homeHero}}) => (
+interface Props {
+  data: {
+    homeHero: HeroProps,
+  }
+}
+
+const HomePage = ({data: {homeHero}}: Props) => (
   <Box>
-    <Hero data={homeHero} />
+    <Hero {...homeHero} />
     <Box>Rest of homepage</Box>
   </Box>
 )
@@ -14,7 +20,7 @@ export default HomePage
 
 export const query = graphql`
   query homeQuery {
-    homeHero: contentfulHero (id: {eq: "ngDKvizQGsA8iImmia4yI"}) {
+    homeHero: contentfulHero (contentful_id: {eq: "ngDKvizQGsA8iImmia4yI"}) {
       title
       body {
         body
