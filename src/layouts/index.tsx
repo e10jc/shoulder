@@ -57,7 +57,7 @@ class HomePage extends React.Component<Props, State> {
     }
   }
 
-  stateAuthFn = async fn => {
+  async stateAuthFn (fn) {
     await fn(this.auth)
     this.setState({...this.state, currentUser: this.auth.currentUser()})
   }
