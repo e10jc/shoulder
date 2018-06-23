@@ -21,24 +21,16 @@ injectGlobal`
 
 export const AuthContext = React.createContext(null)
 
-interface Props {
-  children: any,
-}
+interface Props {children: any}
+interface State {currentUser: object}
 
-interface State {
-  currentUser: object,
-}
-
-class HomePage extends React.Component<Props> {
+class HomePage extends React.Component<Props, State> {
   auth
+  state = {currentUser: null}
 
-  state = {
-    currentUser: null,
-  }
-
-  componentDidMount () {
-    this.auth = require('../helpers/auth')()
-    this.setState({...this.state, currentUser: this.auth.currentUser()})
+  constructor (props) {
+    super(props)
+    this.initAuthForBrowser()
   }
 
   render () {
@@ -51,6 +43,18 @@ class HomePage extends React.Component<Props> {
         </AuthContext.Provider>
       </Provider>
     )
+  }
+
+  initAuthForBrowser = () => {
+    if (typeof window !== 'undefined') {
+      const GoTrue = require('gotrue-js').default
+      this.auth = new GoTrue({
+        APIUrl: process.env.GATSBY_NETLIFY_IDENTITY_URL,
+        audience: '',
+        setCookie: true,
+      })
+      this.state = {...this.state, currentUser: this.auth.currentUser()}
+    }
   }
 
   stateAuthFn = async fn => {
