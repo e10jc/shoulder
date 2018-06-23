@@ -20,18 +20,20 @@ class Signup extends React.Component<{}, State> {
     return (
       <Box>
         <AuthContext.Consumer>
-          {(auth) => (
-            !this.state.didSignUp ? (
-              <form onSubmit={this.handleSubmit(auth)}>
+          {({currentUser, signup}) => (
+            !currentUser && !this.state.didSignUp ? (
+              <form onSubmit={this.handleSubmit(signup)}>
                 <Label>Email</Label>
                 <Input onChange={this.handleInputChange('inputEmail')} type='email' required value={this.state.inputEmail} />
                 <Label>Password</Label>
                 <Input onChange={this.handleInputChange('inputPassword')} type='password' required value={this.state.inputPassword} />
                 <Button type='submit'>Submit</Button>
               </form>
-            ) : (
+            ) : (!currentUser ? (
               <div>Check your email for a confirmation link.</div>
-            )
+            ) : (
+              <div>You're signed in!.</div>
+            ))
           )}
         </AuthContext.Consumer>
       </Box>
@@ -42,10 +44,10 @@ class Signup extends React.Component<{}, State> {
     this.setState({...this.state, [stateKey]: e.target.value})
   }
 
-  handleSubmit = (auth) => async (e) => {
+  handleSubmit = (signup) => async (e) => {
     e.preventDefault()
     try {
-      await auth.signup(this.state.inputEmail, this.state.inputPassword, true)
+      await signup(this.state.inputEmail, this.state.inputPassword)
       this.setState({...this.state, didSignUp: true})
     } catch (err) {
       alert(`Error signing up: ${err.message}`)

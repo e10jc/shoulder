@@ -4,14 +4,12 @@ import {Box, Button, Label, Input} from 'rebass'
 import {AuthContext} from '../layouts/index'
 
 interface State {
-  didLogin: boolean,
   inputEmail: string,
   inputPassword: string,
 }
 
 class Login extends React.Component<{}, State> {
   state = {
-    didLogin: false,
     inputEmail: '',
     inputPassword: '',
   }
@@ -20,9 +18,9 @@ class Login extends React.Component<{}, State> {
     return (
       <Box>
         <AuthContext.Consumer>
-          {(auth) => (
-            !this.state.didLogin ? (
-              <form onSubmit={this.handleSubmit(auth)}>
+          {({currentUser, login}) => (
+            !currentUser ? (
+              <form onSubmit={this.handleSubmit(login)}>
                 <Label>Email</Label>
                 <Input onChange={this.handleInputChange('inputEmail')} type='email' required value={this.state.inputEmail} />
                 <Label>Password</Label>
@@ -42,11 +40,10 @@ class Login extends React.Component<{}, State> {
     this.setState({...this.state, [stateKey]: e.target.value})
   }
 
-  handleSubmit = (auth) => async (e) => {
+  handleSubmit = (login) => async (e) => {
     e.preventDefault()
     try {
-      await auth.login(this.state.inputEmail, this.state.inputPassword, true)
-      this.setState({...this.state, didLogin: true})
+      await login(this.state.inputEmail, this.state.inputPassword, true)
     } catch (err) {
       alert(`Error signing up: ${err.message}`)
     }

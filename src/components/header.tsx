@@ -5,13 +5,9 @@ import {Box, Flex, Heading, Text} from 'rebass'
 import {AuthContext} from '../layouts/index'
 import Div from './div'
 
-const handleLogoutClick = (auth) => () => {
-  auth.currentUser().logout()
-}
-
 export default () => (
   <AuthContext.Consumer>
-    {(auth) => (
+    {({currentUser, logout}) => (
       <Box bg='purple'>
         <Flex justifyContent='space-between'>
           <Box>
@@ -30,7 +26,7 @@ export default () => (
               <Link to='/about'>
                 <Text color='white' p={3}>About</Text>
               </Link>
-              {!auth.currentUser() ? (
+              {!currentUser ? (
                 <>
                   <Link to='/login'>
                     <Text color='white' p={3}>Login</Text>
@@ -40,7 +36,7 @@ export default () => (
                   </Link>
                 </>
               ) : (
-                <Text color='white' p={3} onClick={handleLogoutClick(auth)}>Logout</Text>
+                <Text color='white' p={3} onClick={logout}>Logout</Text>
               )}
             </Flex>
           </Div>
