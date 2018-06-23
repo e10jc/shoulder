@@ -1,7 +1,7 @@
-import * as queryString from 'query-string'
+import * as qs from 'qs'
 import * as React from 'react'
 import * as Modal from 'react-modal'
-import {Box, Button, ButtonOutline, Flex, Heading, Input, Text} from 'rebass'
+import {Box} from 'rebass'
 
 import {AuthContext} from '../layouts/index'
 
@@ -42,7 +42,7 @@ class ConfirmModal extends React.Component<Props, State> {
   }
 
   detectConfirmationFromUrl = async () => {
-    const {confirmation_token: token} = queryString.parse(window.location.hash)
+    const {confirmation_token: token} = qs.parse(window.location.hash)
     if (token) {
       this.setState({...this.state, shouldDisplay: true})
       try {
