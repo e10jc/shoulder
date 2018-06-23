@@ -3,7 +3,6 @@ import {Provider} from 'rebass'
 import {injectGlobal} from 'styled-components'
 
 import Header from '../components/header'
-import Auth from '../helpers/auth'
 import ConfirmedModal from '../modals/confirm'
 
 const theme = {
@@ -31,10 +30,15 @@ interface State {
 }
 
 class HomePage extends React.Component<Props> {
-  auth = Auth()
+  auth
 
   state = {
-    currentUser: this.auth.currentUser(),
+    currentUser: null,
+  }
+
+  componentDidMount () {
+    this.auth = require('../helpers/auth')()
+    this.setState({...this.state, currentUser: this.auth.currentUser()})
   }
 
   render () {
