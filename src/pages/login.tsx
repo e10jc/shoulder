@@ -4,14 +4,14 @@ import {Box, Button, Label, Input} from 'rebass'
 import {AuthContext} from '../layouts/index'
 
 interface State {
-  didSignUp: boolean,
+  didLogin: boolean,
   inputEmail: string,
   inputPassword: string,
 }
 
-class Signup extends React.Component<{}, State> {
+class Login extends React.Component<{}, State> {
   state = {
-    didSignUp: false,
+    didLogin: false,
     inputEmail: '',
     inputPassword: '',
   }
@@ -21,7 +21,7 @@ class Signup extends React.Component<{}, State> {
       <Box>
         <AuthContext.Consumer>
           {(auth) => (
-            !this.state.didSignUp ? (
+            !this.state.didLogin ? (
               <form onSubmit={this.handleSubmit(auth)}>
                 <Label>Email</Label>
                 <Input onChange={this.handleInputChange('inputEmail')} type='email' required value={this.state.inputEmail} />
@@ -30,7 +30,7 @@ class Signup extends React.Component<{}, State> {
                 <Button type='submit'>Submit</Button>
               </form>
             ) : (
-              <div>Check your email for a confirmation link.</div>
+              <div>You're logged in!</div>
             )
           )}
         </AuthContext.Consumer>
@@ -45,12 +45,12 @@ class Signup extends React.Component<{}, State> {
   handleSubmit = (auth) => async (e) => {
     e.preventDefault()
     try {
-      await auth.signup(this.state.inputEmail, this.state.inputPassword, true)
-      this.setState({...this.state, didSignUp: true})
+      await auth.login(this.state.inputEmail, this.state.inputPassword, true)
+      this.setState({...this.state, didLogin: true})
     } catch (err) {
       alert(`Error signing up: ${err.message}`)
     }
   }
 }
 
-export default Signup
+export default Login

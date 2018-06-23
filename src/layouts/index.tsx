@@ -3,6 +3,8 @@ import {Provider} from 'rebass'
 import {injectGlobal} from 'styled-components'
 
 import Header from '../components/header'
+import Auth from '../helpers/auth'
+import ConfirmedModal from '../modals/confirmed'
 
 const theme = {
   colors: {
@@ -18,9 +20,25 @@ injectGlobal`
   html, body { margin: 0 }
 `
 
-export default ({children}) => (
-  <Provider theme={theme}>
-    <Header />
-    {children()}
-  </Provider>
-)
+const auth = Auth()
+export const AuthContext = React.createContext(auth)
+
+interface Props {
+  children: any,
+}
+
+class HomePage extends React.Component<Props> {
+  render () {
+    return (
+      <Provider theme={theme}>
+        <AuthContext.Provider value={auth}>
+          <Header />
+          {this.props.children()}
+          <ConfirmedModal />
+        </AuthContext.Provider>
+      </Provider>
+    )
+  }
+}
+
+export default HomePage
