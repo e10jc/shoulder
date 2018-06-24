@@ -2,6 +2,7 @@ require('dotenv').config()
 
 module.exports = {
   plugins: [
+    'gatsby-plugin-styled-components',
     'gatsby-plugin-typescript',
     {
       resolve: `gatsby-source-contentful`,
@@ -10,6 +11,5 @@ module.exports = {
         accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
       },
     },
-    'gatsby-plugin-styled-components',
   ]
 }
