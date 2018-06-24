@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Box, Button, ButtonOutline, Flex, Heading, Input, Text} from 'rebass'
+import {Box, Button, ButtonOutline, Caps, Flex, Heading, Input, Text} from 'rebass'
 
 import Hero, {Props as HeroProps} from '../components/hero'
 
@@ -26,9 +26,9 @@ class GuidePage extends React.Component<Props, State> {
   state = {
     recencyInput: '',
     religionInput: '',
-    selRecency: '',
-    selReligion: '',
-    selState: '',
+    selRecency: loadFromLocalStorageInBrowser('selRecency'),
+    selReligion: loadFromLocalStorageInBrowser('selReligion'),
+    selState: loadFromLocalStorageInBrowser('selState'),
     stateInput: '',
   }
 
@@ -89,8 +89,18 @@ class GuidePage extends React.Component<Props, State> {
           <Box>
             <Hero {...guideHero} />
             <Flex flexWrap='wrap'>
-              <Box width={[1, 1 / 3]}>Left</Box>
-              <Box width={[1, 2 / 3]}>Right</Box>
+              <NavContainer width={[1, 1 / 4]}>
+                <Box px={3} py={4}>
+                  <Caps>Timeline</Caps>
+                </Box>
+                <Box bg='red' color='white' p={4}>
+                  <Text>Things to do immediately</Text>
+                </Box>
+              </NavContainer>
+              <Box width={[1, 3 / 4]}>
+                <Heading>Get a legal pronouncement of death</Heading>
+                <Text>And do other things too.</Text>
+              </Box>
             </Flex>
           </Box>
         )}
@@ -113,7 +123,9 @@ class GuidePage extends React.Component<Props, State> {
 
   handleSubmit = (toStateKey: string, fromStateKey: string) => (e) => {
     e.preventDefault()
-    this.setState({...this.state, [toStateKey]: this.state[fromStateKey]})
+    const value = this.state[fromStateKey]
+    this.setState({...this.state, [toStateKey]: value})
+    window.localStorage.setItem(`guide:${toStateKey}`, value)
   }
 }
 
@@ -136,3 +148,14 @@ export const query = graphql`
     }
   }`
   
+  const loadFromLocalStorageInBrowser = (stateKey: string) => {
+    if (typeof window !== 'undefined') {
+      return window.localStorage.getItem(`guide:${stateKey}`)
+    } else {
+      return ''
+    }
+  }
+
+  const NavContainer = Box.extend`
+    box-shadow: 0px 0px 15px #bbb;
+  `
