@@ -18,6 +18,19 @@ interface Props {
         node: {name: string}
       }[]
     },
+    sections: {
+      edges: {
+        node: {
+          blocks: {
+            body: {body: string},
+            id: string,
+            title: string,
+          }[],
+          id: string,
+          title: string,
+        }
+      }[]
+    },
   },
   signup: () => any,
 }
@@ -46,7 +59,7 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   render () {
-    const {currentUser, data: {guideHero, recencies: {edges: recencies}, religions: {edges: religions}}, signup} = this.props
+    const {currentUser, data: {guideHero, recencies: {edges: recencies}, religions: {edges: religions}, sections: {edges: sections}}, signup} = this.props
     const {recencyInput, religionInput, selRecency, selReligion, selState} = this.state
 
     return (
@@ -125,15 +138,24 @@ class GuidePage extends React.Component<Props, State> {
                 <Box px={3} py={4}>
                   <Caps>Timeline</Caps>
                 </Box>
-                <Box bg='red' color='white' p={4}>
-                  <Text>Things to do immediately</Text>
-                </Box>
+                {sections.map(({node: {id, title}}) => (
+                  <Box bg='red' color='white' key={id} p={4}>
+                    <Text>{title}</Text>
+                  </Box>
+                ))}
+                
               </NavContainer>
 
-              <Box width={[1, 3 / 4]}>
-                <Heading>Get a legal pronouncement of death</Heading>
-                <Text>And do other things too.</Text>
-              </Box>
+              {sections.map(({node: {blocks, id}}) => (
+                <Box key={id} width={[1, 3 / 4]}>
+                  {blocks.map(({body: {body}, id, title}) => (
+                    <Box key={id}>
+                      <Heading>{title}</Heading>
+                      <Text>{body}</Text>
+                    </Box>
+                  ))}
+                </Box>
+              ))}
             </Flex>
           </Box>
         )}
@@ -199,6 +221,20 @@ export const query = graphql`
     religions: allContentfulGuidePersonalizationReligion {
       edges {
         node {name}
+      }
+    }
+
+    sections: allContentfulGuideSection (sort: {fields: [order]}) {
+      edges {
+        node {
+          blocks {
+            body {body}
+            id
+            title
+          }
+          id
+          title
+        }
       }
     }
   }`
