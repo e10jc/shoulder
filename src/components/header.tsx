@@ -20,9 +20,6 @@ export default () => (
               <Link to='/guide'>
                 <Text color='white' p={3}>Guide</Text>
               </Link>
-              <Link to='/community'>
-                <Text color='white' p={3}>Community</Text>
-              </Link>
               <Link to='/about'>
                 <Text color='white' p={3}>About</Text>
               </Link>

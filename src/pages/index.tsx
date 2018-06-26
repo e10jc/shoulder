@@ -79,17 +79,13 @@ export const query = graphql`
   query homePageQuery {
     homeHero: contentfulHero (contentful_id: {eq: "ngDKvizQGsA8iImmia4yI"}) {
       title
-      body {
-        body
-      }
+      body {body}
       linkUrl
       linkTitle
     }
 
     title: contentfulCopy (key: {eq: "Home Page Title"}) {
-      value {
-        value
-      }
+      value {value}
     }
 
     heroImage: contentfulImage (key: {eq: "Home Page Hero"}) {

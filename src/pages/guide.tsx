@@ -6,10 +6,16 @@ import Hero, {Props as HeroProps} from '../components/hero'
 interface Props {
   data: {
     guideHero: HeroProps,
-    personalizedGuideOptions: {
-      recencies: string[],
-      religions: string[],
-    }
+    recencies: {
+      edges: {
+        node: {name: string}
+      }[]
+    },
+    religions: {
+      edges: {
+        node: {name: string}
+      }[]
+    },
   }
 }
 
@@ -33,7 +39,7 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   render () {
-    const {data: {guideHero, personalizedGuideOptions: {recencies, religions}}} = this.props
+    const {data: {guideHero, recencies: {edges: recencies}, religions: {edges: religions}}} = this.props
     const {recencyInput, religionInput, selRecency, selReligion, selState} = this.state
 
     return (
@@ -64,8 +70,8 @@ class GuidePage extends React.Component<Props, State> {
               <form onSubmit={this.handleSubmit('selReligion', 'religionInput')}>
                 <Heading>Religion?</Heading>
                 <Box>
-                  {religions.map(religion => (
-                    <ButtonOutline color='white' key={religion} onClick={this.handleOptionClick('religionInput', religion)}>{religion}</ButtonOutline>
+                  {religions.map(({node: {name}}) => (
+                    <ButtonOutline color='white' key={name} onClick={this.handleOptionClick('religionInput', name)}>{name}</ButtonOutline>
                   ))}
                 </Box>
                 <Button>Submit</Button>
@@ -75,8 +81,8 @@ class GuidePage extends React.Component<Props, State> {
               <form onSubmit={this.handleSubmit('selRecency', 'recencyInput')}>
                 <Heading>Recency?</Heading>
                 <Box>
-                  {recencies.map(recency => (
-                    <ButtonOutline key={recency} onClick={this.handleOptionClick('recencyInput', recency)}>{recency}</ButtonOutline>
+                  {recencies.map(({node: {name}}) => (
+                    <ButtonOutline key={name} onClick={this.handleOptionClick('recencyInput', name)}>{name}</ButtonOutline>
                   ))}
                 </Box>
                 <Button bg='white' color='purple'>Submit</Button>
@@ -133,18 +139,23 @@ export default GuidePage
 
 export const query = graphql`
   query guideQuery {
-    personalizedGuideOptions: contentfulPersonalizedGuideOption (contentful_id: {eq: "6q0PFbSuRywKOMC8UKuEKI"}) {
-      religions
-      recencies
-    }
-
     guideHero: contentfulHero (contentful_id: {eq: "3qaxnqaxuooqu8SESGgGMY"}) {
       title
-      body {
-        body
-      }
+      body {body}
       linkUrl
       linkTitle
+    }
+    
+    recencies: allContentfulGuidePersonalizationRecency {
+      edges {
+        node {name}
+      }
+    }
+    
+    religions: allContentfulGuidePersonalizationReligion {
+      edges {
+        node {name}
+      }
     }
   }`
   
