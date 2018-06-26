@@ -65,7 +65,11 @@ class HomePage extends React.Component<Props, State> {
   confirm = (...opts) => this.stateAuthFn(auth => auth.confirm(...opts))
   login = (...opts) => this.stateAuthFn(auth => auth.login(...opts))
   logout = () => this.stateAuthFn(auth => auth.currentUser().logout())
-  signup = (...opts) => this.stateAuthFn(auth => auth.signup(...opts))
+  signup = (...opts) => this.stateAuthFn(async auth => {
+    // can't remember users through auth.signup
+    await auth.signup(...opts)
+    return auth.login(...[...opts, true])
+  })
 }
 
 export default HomePage

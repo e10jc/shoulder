@@ -1,9 +1,11 @@
 import * as React from 'react'
-import {Box, Button, ButtonOutline, Caps, Flex, Heading, Input, Text} from 'rebass'
+import {Box, Button, ButtonOutline, Caps, Flex, Heading, Input, Label, Text} from 'rebass'
 
 import Hero, {Props as HeroProps} from '../components/hero'
+import {AuthContext} from '../layouts'
 
 interface Props {
+  currentUser: object,
   data: {
     guideHero: HeroProps,
     recencies: {
@@ -16,10 +18,13 @@ interface Props {
         node: {name: string}
       }[]
     },
-  }
+  },
+  signup: () => any,
 }
 
 interface State {
+  inputEmail: string,
+  inputPassword: string,
   recencyInput: string,
   religionInput: string,
   selRecency: string,
@@ -30,6 +35,8 @@ interface State {
 
 class GuidePage extends React.Component<Props, State> {
   state = {
+    inputEmail: '',
+    inputPassword: '',
     recencyInput: '',
     religionInput: '',
     selRecency: loadFromLocalStorageInBrowser('selRecency'),
@@ -39,7 +46,7 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   render () {
-    const {data: {guideHero, recencies: {edges: recencies}, religions: {edges: religions}}} = this.props
+    const {currentUser, data: {guideHero, recencies: {edges: recencies}, religions: {edges: religions}}, signup} = this.props
     const {recencyInput, religionInput, selRecency, selReligion, selState} = this.state
 
     return (
@@ -47,14 +54,17 @@ class GuidePage extends React.Component<Props, State> {
         {!this.didFinishPersonalizingGuide() && (
           <Box bg='darkGray'>
             <Flex mx={-1}>
-              <Box px={1} width={1 / 3}>
+              <Box px={1} width={1 / 4}>
                 <Box bg={selState ? 'red' : 'white'}>&nbsp;</Box>
               </Box>
-              <Box px={1} width={1 / 3}>
+              <Box px={1} width={1 / 4}>
                 <Box bg={selState && selReligion ? 'red' : 'white'}>&nbsp;</Box>
               </Box>
-              <Box px={1} width={1 / 3}>
+              <Box px={1} width={1 / 4}>
                 <Box bg={selState && selReligion && selRecency ? 'red' : 'white'}>&nbsp;</Box>
+              </Box>
+              <Box px={1} width={1 / 4}>
+                <Box bg={selState && selReligion && selRecency && currentUser ? 'red' : 'white'}>&nbsp;</Box>
               </Box>
             </Flex>
 
@@ -66,6 +76,7 @@ class GuidePage extends React.Component<Props, State> {
                 <Button bg='white' color='purple'>Submit</Button>
               </form>
             )}
+
             {selState && !selReligion && (
               <form onSubmit={this.handleSubmit('selReligion', 'religionInput')}>
                 <Heading>Religion?</Heading>
@@ -77,6 +88,7 @@ class GuidePage extends React.Component<Props, State> {
                 <Button>Submit</Button>
               </form>
             )}
+
             {selState && selReligion && !selRecency && (
               <form onSubmit={this.handleSubmit('selRecency', 'recencyInput')}>
                 <Heading>Recency?</Heading>
@@ -87,6 +99,20 @@ class GuidePage extends React.Component<Props, State> {
                 </Box>
                 <Button bg='white' color='purple'>Submit</Button>
               </form>
+            )}
+
+            {selState && selReligion && selRecency && !currentUser && (
+              <Box>
+                <Heading>Create an account</Heading>
+                <Text>Sign up because it's awesome.</Text>
+                <form onSubmit={this.handleSignupSubmit(signup)}>
+                  <Label>Email</Label>
+                  <Input onChange={this.handleInputChange('inputEmail')} type='email' required value={this.state.inputEmail} />
+                  <Label>Password</Label>
+                  <Input onChange={this.handleInputChange('inputPassword')} type='password' required value={this.state.inputPassword} />
+                  <Button type='submit'>Submit</Button>
+                </form>
+              </Box>
             )}
           </Box>
         )}
@@ -103,6 +129,7 @@ class GuidePage extends React.Component<Props, State> {
                   <Text>Things to do immediately</Text>
                 </Box>
               </NavContainer>
+
               <Box width={[1, 3 / 4]}>
                 <Heading>Get a legal pronouncement of death</Heading>
                 <Text>And do other things too.</Text>
@@ -115,12 +142,25 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   didFinishPersonalizingGuide = () => (
-    this.state.selState && this.state.selReligion && this.state.selRecency
+    this.state.selState && this.state.selReligion && this.state.selRecency && this.props.currentUser
   )
+
+  handleInputChange = (stateKey: string) => e => {
+    this.setState({...this.state, [stateKey]: e.target.value})
+  }
 
   handleOptionClick = (stateKey: string, stateValue: string) => (e) => {
     e.preventDefault()
     this.setState({...this.state, [stateKey]: stateValue})
+  }
+
+  handleSignupSubmit = (signup) => async (e) => {
+    e.preventDefault()
+    try {
+      await signup(this.state.inputEmail, this.state.inputPassword)
+    } catch (err) {
+      alert(`Error signing up: ${err.message}`)
+    }
   }
 
   handleStateInputChange = (e) => {
@@ -135,7 +175,11 @@ class GuidePage extends React.Component<Props, State> {
   }
 }
 
-export default GuidePage
+export default props => (
+  <AuthContext.Consumer>
+    {({currentUser, signup}) => <GuidePage {...props} currentUser={currentUser} signup={signup} />}
+  </AuthContext.Consumer>
+)
 
 export const query = graphql`
   query guideQuery {
