@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Provider} from 'rebass'
+import {Box, Flex, Provider} from 'rebass'
 import {injectGlobal} from 'styled-components'
 
 import Footer from '../components/footer'
@@ -19,6 +19,7 @@ const theme = {
 injectGlobal`
   a { text-decoration: none }
   html, body { margin: 0 }
+  html, body, #___gatsby, #___gatsby > div, #___gatsby > div > div { height: 100% }
 `
 
 export const AuthContext = React.createContext(null)
@@ -39,9 +40,11 @@ class Layout extends React.Component<Props, State> {
     return (
       <Provider theme={theme}>
         <AuthContext.Provider value={{currentUser: this.state.currentUser, confirm: this.confirm, login: this.login, logout: this.logout, signup: this.signup}}>
-          <Header />
-          {this.props.children()}
-          <Footer />
+          <Flex flexDirection='column' justifyContent='space-between'>
+            <Header />
+            <Box flex='1'>{this.props.children()}</Box>
+            <Footer />
+          </Flex>
           <ConfirmedModal />
         </AuthContext.Provider>
       </Provider>
