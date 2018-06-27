@@ -61,7 +61,7 @@ class GuidePage extends React.Component<Props, State> {
 
     return (
       <Box>
-        {!this.state.didFinishQuiz ? (
+        {this.state.didFinishQuiz ? (
           <Quiz recencies={recencies} religions={religions} recencyHero={guideRecencyHero} religionHero={guideReligionHero} signupHero={guideSignupHero} stateHero={guideStateHero} />
         ) : (
           <Box>

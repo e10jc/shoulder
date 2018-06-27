@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Box, Caps, Flex, Heading, Text} from 'rebass'
+import {Box, Caps, Container, Flex, Heading, Text} from 'rebass'
 
 import {GSection} from '../pages/guide'
 
@@ -13,30 +13,35 @@ class Guide extends React.Component<Props> {
 
     return (
       <Box>
-        <Flex flexWrap='wrap'>
-          <NavContainer width={[1, 1 / 4]}>
-            <Box px={3} py={4}>
-              <Caps>Timeline</Caps>
+        <Container maxWidth={900}>
+          <Flex flexWrap='wrap' mx={-3} my={3}>
+            <Box px={3} width={[1, 1 / 4]}>
+              <NavContainer>
+                <Box px={3} py={4}>
+                  <Caps>Timeline</Caps>
+                </Box>
+                {sections.map(({node: {id, title}}) => (
+                  <Box bg='red' color='white' key={id} p={4}>
+                    <Text>{title}</Text>
+                  </Box>
+                ))}
+              </NavContainer>
             </Box>
-            {sections.map(({node: {id, title}}) => (
-              <Box bg='red' color='white' key={id} p={4}>
-                <Text>{title}</Text>
-              </Box>
-            ))}
-            
-          </NavContainer>
 
-          {sections.map(({node: {blocks, id}}) => (
-            <Box key={id} width={[1, 3 / 4]}>
-              {blocks.map(({body: {body}, id, title}) => (
+            <Box px={3} width={[1, 3 / 4]}>
+              {sections.map(({node: {blocks, id}}) => (
                 <Box key={id}>
-                  <Heading>{title}</Heading>
-                  <Text>{body}</Text>
+                  {blocks.map(({body: {body}, id, title}) => (
+                    <Box key={id} mb={3}>
+                      <Heading fontSize={4} mb={2}>{title}</Heading>
+                      <Text mb={2}>{body}</Text>
+                    </Box>
+                  ))}
                 </Box>
               ))}
             </Box>
-          ))}
-        </Flex>
+          </Flex>
+        </Container>
       </Box>
     )
   }
