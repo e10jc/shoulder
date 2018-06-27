@@ -1,8 +1,9 @@
 import * as React from 'react'
-import {Box, Button, ButtonOutline, Container, Flex, Heading, Input, Label, Text} from 'rebass'
+import {Box, Button, ButtonOutline, Container, Flex, Heading, Input, Label, Select, Text} from 'rebass'
 
 import {Props as HeroProps} from '../components/hero'
 import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
+import * as states from '../helpers/united-states.json'
 import {GRecency, GReligion} from '../pages/guide'
 import {AuthContext} from '../layouts'
 
@@ -66,7 +67,10 @@ class Quiz extends React.Component<Props, State> {
             <form onSubmit={this.handleSubmit('selState', 'stateInput')}>
               <Title>{stateHero.title}</Title>
               <Body>{stateHero.body.body}</Body>
-              <Input mb={3} placeholder='State' onChange={this.handleStateInputChange} />
+              <Select color='black' mb={3} onChange={this.handleStateSelectChange}>
+                <option />
+                {Object.keys(states).map(acronym => <option key={acronym} value={acronym}>{states[acronym]}</option>)}
+              </Select>
               <Button bg='white' color='purple'>Submit</Button>
             </form>
           )}
@@ -133,7 +137,7 @@ class Quiz extends React.Component<Props, State> {
     }
   }
 
-  handleStateInputChange = (e) => {
+  handleStateSelectChange = e => {
     this.setState({...this.state, stateInput: e.target.value})
   }
 

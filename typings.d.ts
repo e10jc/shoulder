@@ -5,3 +5,8 @@ interface GArray<T> {
     node: T,
   }[],
 }
+
+declare module '*.json' {
+  const value: any
+  export default value
+}
