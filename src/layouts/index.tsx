@@ -2,6 +2,7 @@ import * as React from 'react'
 import {Provider} from 'rebass'
 import {injectGlobal} from 'styled-components'
 
+import Footer from '../components/footer'
 import Header from '../components/header'
 import ConfirmedModal from '../modals/confirm'
 
@@ -25,7 +26,7 @@ export const AuthContext = React.createContext(null)
 interface Props {children: any}
 interface State {currentUser: object}
 
-class HomePage extends React.Component<Props, State> {
+class Layout extends React.Component<Props, State> {
   auth
   state = {currentUser: null}
 
@@ -40,6 +41,7 @@ class HomePage extends React.Component<Props, State> {
         <AuthContext.Provider value={{currentUser: this.state.currentUser, confirm: this.confirm, login: this.login, logout: this.logout, signup: this.signup}}>
           <Header />
           {this.props.children()}
+          <Footer />
           <ConfirmedModal />
         </AuthContext.Provider>
       </Provider>
@@ -73,4 +75,4 @@ class HomePage extends React.Component<Props, State> {
   })
 }
 
-export default HomePage
+export default Layout

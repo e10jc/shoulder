@@ -1,205 +1,78 @@
 import * as React from 'react'
-import {Box, Button, ButtonOutline, Caps, Flex, Heading, Input, Label, Text} from 'rebass'
+import {Box} from 'rebass'
 
 import Hero, {Props as HeroProps} from '../components/hero'
+import Guide from '../components/guide'
+import Quiz, {didFinishQuiz} from '../components/quiz'
 import {AuthContext} from '../layouts'
+
+export interface GRecency {
+  name: string,
+}
+
+export interface GReligion {
+  name: string,
+}
+
+export interface GBlock {
+  body: {body: string},
+  id: string,
+  title: string,
+}
+
+export interface GSection {
+  blocks: GBlock[],
+  id: string,
+  title: string,
+}
 
 interface Props {
   currentUser: object,
   data: {
     guideHero: HeroProps,
-    recencies: {
-      edges: {
-        node: {name: string}
-      }[]
-    },
-    religions: {
-      edges: {
-        node: {name: string}
-      }[]
-    },
-    sections: {
-      edges: {
-        node: {
-          blocks: {
-            body: {body: string},
-            id: string,
-            title: string,
-          }[],
-          id: string,
-          title: string,
-        }
-      }[]
-    },
+    recencies: GArray<GRecency>,
+    religions: GArray<GReligion>,
+    sections: GArray<GSection>,
   },
-  signup: () => any,
 }
 
 interface State {
-  inputEmail: string,
-  inputPassword: string,
-  recencyInput: string,
-  religionInput: string,
-  selRecency: string,
-  selReligion: string,
-  selState: string,
-  stateInput: string,
+  didFinishQuiz: boolean,
 }
 
 class GuidePage extends React.Component<Props, State> {
   state = {
-    inputEmail: '',
-    inputPassword: '',
-    recencyInput: '',
-    religionInput: '',
-    selRecency: loadFromLocalStorageInBrowser('selRecency'),
-    selReligion: loadFromLocalStorageInBrowser('selReligion'),
-    selState: loadFromLocalStorageInBrowser('selState'),
-    stateInput: '',
+    didFinishQuiz: didFinishQuiz(this.props.currentUser),
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    return {
+      ...state,
+      didFinishQuiz: didFinishQuiz(props.currentUser)
+    }
   }
 
   render () {
-    const {currentUser, data: {guideHero, recencies: {edges: recencies}, religions: {edges: religions}, sections: {edges: sections}}, signup} = this.props
-    const {recencyInput, religionInput, selRecency, selReligion, selState} = this.state
+    const {data: {guideHero, recencies, religions, sections}} = this.props
 
     return (
       <Box>
-        {!this.didFinishPersonalizingGuide() && (
-          <Box bg='darkGray'>
-            <Flex mx={-1}>
-              <Box px={1} width={1 / 4}>
-                <Box bg={selState ? 'red' : 'white'}>&nbsp;</Box>
-              </Box>
-              <Box px={1} width={1 / 4}>
-                <Box bg={selState && selReligion ? 'red' : 'white'}>&nbsp;</Box>
-              </Box>
-              <Box px={1} width={1 / 4}>
-                <Box bg={selState && selReligion && selRecency ? 'red' : 'white'}>&nbsp;</Box>
-              </Box>
-              <Box px={1} width={1 / 4}>
-                <Box bg={selState && selReligion && selRecency && currentUser ? 'red' : 'white'}>&nbsp;</Box>
-              </Box>
-            </Flex>
-
-            {!selState && (
-              <form onSubmit={this.handleSubmit('selState', 'stateInput')}>
-                <Heading>State?</Heading>
-                <Text>Laws vary.</Text>
-                <Input placeholder='State' onChange={this.handleStateInputChange} />
-                <Button bg='white' color='purple'>Submit</Button>
-              </form>
-            )}
-
-            {selState && !selReligion && (
-              <form onSubmit={this.handleSubmit('selReligion', 'religionInput')}>
-                <Heading>Religion?</Heading>
-                <Box>
-                  {religions.map(({node: {name}}) => (
-                    <ButtonOutline color='white' key={name} onClick={this.handleOptionClick('religionInput', name)}>{name}</ButtonOutline>
-                  ))}
-                </Box>
-                <Button>Submit</Button>
-              </form>
-            )}
-
-            {selState && selReligion && !selRecency && (
-              <form onSubmit={this.handleSubmit('selRecency', 'recencyInput')}>
-                <Heading>Recency?</Heading>
-                <Box>
-                  {recencies.map(({node: {name}}) => (
-                    <ButtonOutline key={name} onClick={this.handleOptionClick('recencyInput', name)}>{name}</ButtonOutline>
-                  ))}
-                </Box>
-                <Button bg='white' color='purple'>Submit</Button>
-              </form>
-            )}
-
-            {selState && selReligion && selRecency && !currentUser && (
-              <Box>
-                <Heading>Create an account</Heading>
-                <Text>Sign up because it's awesome.</Text>
-                <form onSubmit={this.handleSignupSubmit(signup)}>
-                  <Label>Email</Label>
-                  <Input onChange={this.handleInputChange('inputEmail')} type='email' required value={this.state.inputEmail} />
-                  <Label>Password</Label>
-                  <Input onChange={this.handleInputChange('inputPassword')} type='password' required value={this.state.inputPassword} />
-                  <Button type='submit'>Submit</Button>
-                </form>
-              </Box>
-            )}
-          </Box>
-        )}
-
-        {this.didFinishPersonalizingGuide() && (
+        {!this.state.didFinishQuiz ? (
+          <Quiz recencies={recencies} religions={religions} />
+        ) : (
           <Box>
             <Hero {...guideHero} />
-            <Flex flexWrap='wrap'>
-              <NavContainer width={[1, 1 / 4]}>
-                <Box px={3} py={4}>
-                  <Caps>Timeline</Caps>
-                </Box>
-                {sections.map(({node: {id, title}}) => (
-                  <Box bg='red' color='white' key={id} p={4}>
-                    <Text>{title}</Text>
-                  </Box>
-                ))}
-                
-              </NavContainer>
-
-              {sections.map(({node: {blocks, id}}) => (
-                <Box key={id} width={[1, 3 / 4]}>
-                  {blocks.map(({body: {body}, id, title}) => (
-                    <Box key={id}>
-                      <Heading>{title}</Heading>
-                      <Text>{body}</Text>
-                    </Box>
-                  ))}
-                </Box>
-              ))}
-            </Flex>
+            <Guide sections={sections} />
           </Box>
         )}
       </Box>
     )
   }
-
-  didFinishPersonalizingGuide = () => (
-    this.state.selState && this.state.selReligion && this.state.selRecency && this.props.currentUser
-  )
-
-  handleInputChange = (stateKey: string) => e => {
-    this.setState({...this.state, [stateKey]: e.target.value})
-  }
-
-  handleOptionClick = (stateKey: string, stateValue: string) => (e) => {
-    e.preventDefault()
-    this.setState({...this.state, [stateKey]: stateValue})
-  }
-
-  handleSignupSubmit = (signup) => async (e) => {
-    e.preventDefault()
-    try {
-      await signup(this.state.inputEmail, this.state.inputPassword)
-    } catch (err) {
-      alert(`Error signing up: ${err.message}`)
-    }
-  }
-
-  handleStateInputChange = (e) => {
-    this.setState({...this.state, stateInput: e.target.value})
-  }
-
-  handleSubmit = (toStateKey: string, fromStateKey: string) => (e) => {
-    e.preventDefault()
-    const value = this.state[fromStateKey]
-    this.setState({...this.state, [toStateKey]: value})
-    window.localStorage.setItem(`guide:${toStateKey}`, value)
-  }
 }
 
 export default props => (
   <AuthContext.Consumer>
-    {({currentUser, signup}) => <GuidePage {...props} currentUser={currentUser} signup={signup} />}
+    {({currentUser}) => <GuidePage {...props} currentUser={currentUser} />}
   </AuthContext.Consumer>
 )
 
@@ -238,15 +111,3 @@ export const query = graphql`
       }
     }
   }`
-  
-  const loadFromLocalStorageInBrowser = (stateKey: string) => {
-    if (typeof window !== 'undefined') {
-      return window.localStorage.getItem(`guide:${stateKey}`)
-    } else {
-      return ''
-    }
-  }
-
-  const NavContainer = Box.extend`
-    box-shadow: 0px 0px 15px #bbb;
-  `

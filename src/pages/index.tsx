@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from 'react'
 import {Box, Container, Flex, Heading, Image} from 'rebass'
 
 import Callout from '../components/callout'
