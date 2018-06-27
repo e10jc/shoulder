@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Box, Flex, Heading, Image} from 'rebass'
+import {Box, Container, Flex, Heading, Image} from 'rebass'
 
 import Callout from '../components/callout'
 import Hero, {Props as HeroProps} from '../components/hero'
@@ -48,27 +48,33 @@ const HomePage = ({data: {callouts: {edges: callouts}, heroImage, testimonials: 
   <Box>
     <Hero {...homeHero} />
     <Box>
-      <Heading>{title}</Heading>
+      <Container maxWidth={800}>
+        <Heading my={3} textAlign='center'>{title}</Heading>
 
-      <Flex>
-        {callouts.map(({node: {body: {body}, icon: {file: {url: src}, title: alt}, title}}) => (
-          <Box key={title}>
-            <Callout body={body} image={{alt, src}} title={title} />
-          </Box>
-        ))}
-      </Flex>
+        <Flex mb={4}>
+          {callouts.map(({node: {body: {body}, icon: {file: {url: src}, title: alt}, title}}) => (
+            <Box key={title}>
+              <Callout body={body} image={{alt, src}} title={title} />
+            </Box>
+          ))}
+        </Flex>
 
-      <Box>
-        <Image alt={heroImage.value.title} src={heroImage.value.file.url} />
+        <Box>
+          <Image alt={heroImage.value.title} src={heroImage.value.file.url} />
+        </Box>
+      </Container>
+
+      <Box bg='darkWhite'>
+        <Container maxWidth={800}>
+          <Flex px={2}>
+            {testimonials.map(({node: {body: {body}, name, photo: {file: {url: src}, title: alt}}}) => (
+              <Box key={title} mx={-2} my={3} w={[1, 1 / 3]}>
+                <Testimonial body={body} image={{alt, src}} name={name} />
+              </Box>
+            ))}
+          </Flex>
+        </Container>
       </Box>
-
-      <Flex>
-        {testimonials.map(({node: {body: {body}, name, photo: {file: {url: src}, title: alt}}}) => (
-          <Box key={title}>
-            <Testimonial body={body} image={{alt, src}} name={name} />
-          </Box>
-        ))}
-      </Flex>
     </Box>
   </Box>
 )

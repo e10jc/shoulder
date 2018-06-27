@@ -12,8 +12,8 @@ interface Props {
 
 export default ({body, image, title}: Props) => (
   <Box>
-    <Text>{title}</Text>
     <Image alt={image.alt} src={image.src} />
-    <Text>{body}</Text>
+    <Text textAlign='center' fontSize={3} fontWeight='bold'>{title}</Text>
+    <Text textAlign='center'>{body}</Text>
   </Box>
 )

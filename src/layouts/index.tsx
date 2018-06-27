@@ -8,6 +8,7 @@ import ConfirmedModal from '../modals/confirm'
 const theme = {
   colors: {
     darkPurple: '#352734',
+    darkWhite: '#F5F5F5',
     lightPurple: '#674A64',
     purple: '#5A4258',
     red: '#FF565C',
