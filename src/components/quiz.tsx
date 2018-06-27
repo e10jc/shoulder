@@ -1,15 +1,20 @@
 import * as React from 'react'
-import {Box, Button, ButtonOutline, Flex, Heading, Input, Label, Text} from 'rebass'
+import {Box, Button, ButtonOutline, Container, Flex, Heading, Input, Label, Text} from 'rebass'
 
+import {Props as HeroProps} from '../components/hero'
 import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
 import {GRecency, GReligion} from '../pages/guide'
 import {AuthContext} from '../layouts'
 
 interface Props {
   currentUser: object,
+  recencyHero: HeroProps,
   recencies: GArray<GRecency>,
+  religionHero: HeroProps,
   religions: GArray<GReligion>,
+  signupHero: HeroProps,
   signup: (email: string, password: string) => any,
+  stateHero: HeroProps,
 }
 
 interface State {
@@ -36,40 +41,41 @@ class Quiz extends React.Component<Props, State> {
   }
 
   render () {
-    const {currentUser, recencies: {edges: recencies}, religions: {edges: religions}} = this.props
+    const {currentUser, recencyHero, recencies: {edges: recencies}, religionHero, religions: {edges: religions}, signupHero, stateHero} = this.props
     const {recencyInput, religionInput, selRecency, selReligion, selState} = this.state
 
     return (
-      <Box>
-        <Box bg='darkGray'>
+      <Box bg='darkGray' color='white' p={4}>
+        <Container maxWidth={800}>
           <Flex mx={-1}>
-            <Box px={1} width={1 / 4}>
-              <Box bg={selState ? 'red' : 'white'}>&nbsp;</Box>
-            </Box>
-            <Box px={1} width={1 / 4}>
-              <Box bg={selState && selReligion ? 'red' : 'white'}>&nbsp;</Box>
-            </Box>
-            <Box px={1} width={1 / 4}>
-              <Box bg={selState && selReligion && selRecency ? 'red' : 'white'}>&nbsp;</Box>
-            </Box>
-            <Box px={1} width={1 / 4}>
-              <Box bg={selState && selReligion && selRecency && currentUser ? 'red' : 'white'}>&nbsp;</Box>
-            </Box>
+            <ProgressLineContainer>
+              <ProgressLine bg='red'>&nbsp;</ProgressLine>
+            </ProgressLineContainer>
+            <ProgressLineContainer>
+              <ProgressLine bg={selState ? 'red' : 'white'}>&nbsp;</ProgressLine>
+            </ProgressLineContainer>
+            <ProgressLineContainer>
+              <ProgressLine bg={selState && selReligion ? 'red' : 'white'}>&nbsp;</ProgressLine>
+            </ProgressLineContainer>
+            <ProgressLineContainer>
+              <ProgressLine bg={selState && selReligion && selRecency ? 'red' : 'white'}>&nbsp;</ProgressLine>
+            </ProgressLineContainer>
           </Flex>
 
           {!selState && (
             <form onSubmit={this.handleSubmit('selState', 'stateInput')}>
-              <Heading>State?</Heading>
-              <Text>Laws vary.</Text>
-              <Input placeholder='State' onChange={this.handleStateInputChange} />
+              <Title>{stateHero.title}</Title>
+              <Body>{stateHero.body.body}</Body>
+              <Input mb={3} placeholder='State' onChange={this.handleStateInputChange} />
               <Button bg='white' color='purple'>Submit</Button>
             </form>
           )}
 
           {selState && !selReligion && (
             <form onSubmit={this.handleSubmit('selReligion', 'religionInput')}>
-              <Heading>Religion?</Heading>
-              <Box>
+              <Title>{religionHero.title}</Title>
+              <Body>{religionHero.body.body}</Body>
+              <Box mb={3}>
                 {religions.map(({node: {name}}) => (
                   <ButtonOutline color='white' key={name} onClick={this.handleOptionClick('religionInput', name)}>{name}</ButtonOutline>
                 ))}
@@ -80,8 +86,9 @@ class Quiz extends React.Component<Props, State> {
 
           {selState && selReligion && !selRecency && (
             <form onSubmit={this.handleSubmit('selRecency', 'recencyInput')}>
-              <Heading>Recency?</Heading>
-              <Box>
+              <Title>{recencyHero.title}</Title>
+              <Body>{recencyHero.body.body}</Body>
+              <Box mb={3}>
                 {recencies.map(({node: {name}}) => (
                   <ButtonOutline key={name} onClick={this.handleOptionClick('recencyInput', name)}>{name}</ButtonOutline>
                 ))}
@@ -92,18 +99,18 @@ class Quiz extends React.Component<Props, State> {
 
           {selState && selReligion && selRecency && !currentUser && (
             <Box>
-              <Heading>Create an account</Heading>
-              <Text>Sign up because it's awesome.</Text>
+              <Title>{signupHero.title}</Title>
+              <Body>{signupHero.body.body}</Body>
               <form onSubmit={this.handleSignupSubmit()}>
                 <Label>Email</Label>
-                <Input onChange={this.handleInputChange('inputEmail')} type='email' required value={this.state.inputEmail} />
+                <Input mb={3} onChange={this.handleInputChange('inputEmail')} type='email' required value={this.state.inputEmail} />
                 <Label>Password</Label>
-                <Input onChange={this.handleInputChange('inputPassword')} type='password' required value={this.state.inputPassword} />
+                <Input mb={3} onChange={this.handleInputChange('inputPassword')} type='password' required value={this.state.inputPassword} />
                 <Button type='submit'>Submit</Button>
               </form>
             </Box>
           )}
-        </Box>
+        </Container>
       </Box>
     )
   }
@@ -153,3 +160,13 @@ export const selStateKey = createLocalStorageKey('selState')
 export const didFinishQuiz = currentUser => !!(
   currentUser && getFromLocalStorage(selStateKey) && getFromLocalStorage(selReligionKey) && getFromLocalStorage(selRecencyKey)
 )
+
+const ProgressLineContainer = Box.extend.attrs({px: 1, w: 1 / 4})``
+
+const ProgressLine = Box.extend`
+  height: 8px;
+`
+
+const Title = Heading.extend.attrs({mt: 2, mb: 2})``
+
+const Body = Text.extend.attrs({mb: 3})``

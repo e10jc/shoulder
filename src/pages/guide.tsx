@@ -30,6 +30,10 @@ interface Props {
   currentUser: object,
   data: {
     guideHero: HeroProps,
+    guideRecencyHero: HeroProps,
+    guideReligionHero: HeroProps,
+    guideSignupHero: HeroProps,
+    guideStateHero: HeroProps,
     recencies: GArray<GRecency>,
     religions: GArray<GReligion>,
     sections: GArray<GSection>,
@@ -53,12 +57,12 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   render () {
-    const {data: {guideHero, recencies, religions, sections}} = this.props
+    const {data: {guideHero, guideRecencyHero, guideReligionHero, guideSignupHero, guideStateHero, recencies, religions, sections}} = this.props
 
     return (
       <Box>
         {!this.state.didFinishQuiz ? (
-          <Quiz recencies={recencies} religions={religions} />
+          <Quiz recencies={recencies} religions={religions} recencyHero={guideRecencyHero} religionHero={guideReligionHero} signupHero={guideSignupHero} stateHero={guideStateHero} />
         ) : (
           <Box>
             <Hero {...guideHero} />
@@ -83,6 +87,26 @@ export const query = graphql`
       body {body}
       linkUrl
       linkTitle
+    }
+
+    guideRecencyHero: contentfulHero (contentful_id: {eq: "4nUmmvxpmE8USgo08oKmii"}) {
+      title
+      body {body}
+    }
+
+    guideReligionHero: contentfulHero (contentful_id: {eq: "6aWYBFZAHewsC4O6CugEwC"}) {
+      title
+      body {body}
+    }
+
+    guideSignupHero: contentfulHero (contentful_id: {eq: "1Hde1yVdDKoKOGIcakuKgo"}) {
+      title
+      body {body}
+    }
+
+    guideStateHero: contentfulHero (contentful_id: {eq: "6ifAMUeWooQ04Ecq288ca2"}) {
+      title
+      body {body}
     }
     
     recencies: allContentfulGuidePersonalizationRecency {
