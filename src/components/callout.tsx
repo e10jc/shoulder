@@ -12,7 +12,7 @@ interface Props {
 
 export default ({body, image, title}: Props) => (
   <Box>
-    <Image alt={image.alt} src={image.src} />
+    <Image alt={image.alt} mx='auto' src={image.src} />
     <Text textAlign='center' fontSize={3} fontWeight='bold'>{title}</Text>
     <Text textAlign='center'>{body}</Text>
   </Box>
