@@ -4,18 +4,27 @@ import {Box, Button, ButtonOutline, Container, Flex, Heading, Input, Label, Sele
 import {Props as HeroProps} from '../components/hero'
 import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
 import * as states from '../helpers/united-states.json'
-import {GRecency, GReligion} from '../pages/guide'
 import {AuthContext} from '../layouts'
+
+export interface GRecency {
+  name: string,
+}
+
+export interface GReligion {
+  name: string,
+}
 
 interface Props {
   currentUser: object,
-  recencyHero: HeroProps,
-  recencies: GArray<GRecency>,
-  religionHero: HeroProps,
-  religions: GArray<GReligion>,
-  signupHero: HeroProps,
+  data: {
+    recencyHero: HeroProps,
+    religionHero: HeroProps,
+    signupHero: HeroProps,
+    stateHero: HeroProps,
+    recencies: GArray<GRecency>,
+    religions: GArray<GReligion>,
+  },
   signup: (email: string, password: string) => any,
-  stateHero: HeroProps,
 }
 
 interface State {
@@ -29,7 +38,7 @@ interface State {
   stateInput: string,
 }
 
-class Quiz extends React.Component<Props, State> {
+class QuizPage extends React.Component<Props, State> {
   state = {
     inputEmail: '',
     inputPassword: '',
@@ -42,7 +51,7 @@ class Quiz extends React.Component<Props, State> {
   }
 
   render () {
-    const {currentUser, recencyHero, recencies: {edges: recencies}, religionHero, religions: {edges: religions}, signupHero, stateHero} = this.props
+    const {currentUser, data: {recencyHero, recencies: {edges: recencies}, religionHero, religions: {edges: religions}, signupHero, stateHero}} = this.props
     const {recencyInput, religionInput, selRecency, selReligion, selState} = this.state
 
     return (
@@ -132,6 +141,7 @@ class Quiz extends React.Component<Props, State> {
     e.preventDefault()
     try {
       await this.props.signup(this.state.inputEmail, this.state.inputPassword)
+      window.location.href = '/guide/'
     } catch (err) {
       alert(`Error signing up: ${err.message}`)
     }
@@ -151,11 +161,11 @@ class Quiz extends React.Component<Props, State> {
 
 export default props => (
   <AuthContext.Consumer>
-    {({currentUser, signup}) => <Quiz {...props} currentUser={currentUser} signup={signup} />}
+    {({currentUser, signup}) => <QuizPage {...props} currentUser={currentUser} signup={signup} />}
   </AuthContext.Consumer>
 )
 
-export const createLocalStorageKey = (key: string) => `guide:${key}`
+export const createLocalStorageKey = (key: string) => `quiz:${key}`
 
 export const selRecencyKey = createLocalStorageKey('selRecency')
 export const selReligionKey = createLocalStorageKey('selReligion')
@@ -174,3 +184,39 @@ const ProgressLine = Box.extend`
 const Title = Heading.extend.attrs({mt: 2, mb: 2})``
 
 const Body = Text.extend.attrs({mb: 3})``
+
+export const query = graphql`
+  query quizQuery {
+    recencyHero: contentfulHero (contentful_id: {eq: "4nUmmvxpmE8USgo08oKmii"}) {
+      title
+      body {body}
+    }
+
+    religionHero: contentfulHero (contentful_id: {eq: "6aWYBFZAHewsC4O6CugEwC"}) {
+      title
+      body {body}
+    }
+
+    signupHero: contentfulHero (contentful_id: {eq: "1Hde1yVdDKoKOGIcakuKgo"}) {
+      title
+      body {body}
+    }
+
+    stateHero: contentfulHero (contentful_id: {eq: "6ifAMUeWooQ04Ecq288ca2"}) {
+      title
+      body {body}
+    }
+    
+    recencies: allContentfulGuidePersonalizationRecency {
+      edges {
+        node {name}
+      }
+    }
+    
+    religions: allContentfulGuidePersonalizationReligion {
+      edges {
+        node {name}
+      }
+    }
+  }
+`

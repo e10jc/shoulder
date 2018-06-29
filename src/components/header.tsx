@@ -3,6 +3,7 @@ import * as React from 'react'
 import {Box, Flex, Heading, Text} from 'rebass'
 
 import {AuthContext} from '../layouts/index'
+import {didFinishQuiz} from '../pages/quiz'
 import Div from './div'
 
 export default () => (
@@ -17,18 +18,18 @@ export default () => (
           </Box>
           <Div display={['none', 'block']}>
             <Flex>
-              <Link to='/guide'>
+              <Link to={didFinishQuiz(currentUser) ? '/guide/' : '/quiz/'}>
                 <Text color='white' p={3}>Guide</Text>
               </Link>
-              <Link to='/about'>
+              <Link to='/about/'>
                 <Text color='white' p={3}>About</Text>
               </Link>
               {!currentUser ? (
                 <>
-                  <Link to='/login'>
+                  <Link to='/login/'>
                     <Text color='white' p={3}>Login</Text>
                   </Link>
-                  <Link to='/signup'>
+                  <Link to='/signup/'>
                     <Text bg='lightPurple' color='white' px={4} py={3}>Sign up</Text>
                   </Link>
                 </>

@@ -1,18 +1,8 @@
 import * as React from 'react'
-import {Box} from 'rebass'
+import * as Markdown from 'react-markdown'
+import {Box, Caps, Container, Flex, Heading, Text} from 'rebass'
 
 import Hero, {Props as HeroProps} from '../components/hero'
-import Guide from '../components/guide'
-import Quiz, {didFinishQuiz} from '../components/quiz'
-import {AuthContext} from '../layouts'
-
-export interface GRecency {
-  name: string,
-}
-
-export interface GReligion {
-  name: string,
-}
 
 export interface GBlock {
   body: {body: string},
@@ -27,58 +17,54 @@ export interface GSection {
 }
 
 interface Props {
-  currentUser: object,
   data: {
     guideHero: HeroProps,
-    guideRecencyHero: HeroProps,
-    guideReligionHero: HeroProps,
-    guideSignupHero: HeroProps,
-    guideStateHero: HeroProps,
-    recencies: GArray<GRecency>,
-    religions: GArray<GReligion>,
     sections: GArray<GSection>,
   },
 }
 
-interface State {
-  didFinishQuiz: boolean,
-}
-
-class GuidePage extends React.Component<Props, State> {
-  state = {
-    didFinishQuiz: didFinishQuiz(this.props.currentUser),
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    return {
-      ...state,
-      didFinishQuiz: didFinishQuiz(props.currentUser)
-    }
-  }
-
+class GuidePage extends React.Component<Props> {
   render () {
-    const {data: {guideHero, guideRecencyHero, guideReligionHero, guideSignupHero, guideStateHero, recencies, religions, sections}} = this.props
+    const {data: {guideHero, sections: {edges: sections}}} = this.props
 
     return (
       <Box>
-        {!this.state.didFinishQuiz ? (
-          <Quiz recencies={recencies} religions={religions} recencyHero={guideRecencyHero} religionHero={guideReligionHero} signupHero={guideSignupHero} stateHero={guideStateHero} />
-        ) : (
-          <Box>
-            <Hero {...guideHero} />
-            <Guide sections={sections} />
-          </Box>
-        )}
+        <Hero {...guideHero} />
+        <Container maxWidth={900}>
+          <Flex flexWrap='wrap' mx={-3} my={3}>
+            <Box px={3} width={[1, 1, 1 / 4]}>
+              <NavContainer>
+                <Box px={3} py={4}>
+                  <Caps>Timeline</Caps>
+                </Box>
+                {sections.map(({node: {id, title}}) => (
+                  <Box bg='red' color='white' key={id} p={4}>
+                    <Text>{title}</Text>
+                  </Box>
+                ))}
+              </NavContainer>
+            </Box>
+
+            <Box px={3} width={[1, 1, 3 / 4]}>
+              {sections.map(({node: {blocks, id}}) => (
+                <Box key={id}>
+                  {blocks.map(({body: {body}, id, title}) => (
+                    <Box key={id} mb={3}>
+                      <Heading fontSize={4} mb={2}>{title}</Heading>
+                      <Markdown source={body} />
+                    </Box>
+                  ))}
+                </Box>
+              ))}
+            </Box>
+          </Flex>
+        </Container>
       </Box>
     )
   }
 }
 
-export default props => (
-  <AuthContext.Consumer>
-    {({currentUser}) => <GuidePage {...props} currentUser={currentUser} />}
-  </AuthContext.Consumer>
-)
+export default GuidePage
 
 export const query = graphql`
   query guideQuery {
@@ -87,38 +73,6 @@ export const query = graphql`
       body {body}
       linkUrl
       linkTitle
-    }
-
-    guideRecencyHero: contentfulHero (contentful_id: {eq: "4nUmmvxpmE8USgo08oKmii"}) {
-      title
-      body {body}
-    }
-
-    guideReligionHero: contentfulHero (contentful_id: {eq: "6aWYBFZAHewsC4O6CugEwC"}) {
-      title
-      body {body}
-    }
-
-    guideSignupHero: contentfulHero (contentful_id: {eq: "1Hde1yVdDKoKOGIcakuKgo"}) {
-      title
-      body {body}
-    }
-
-    guideStateHero: contentfulHero (contentful_id: {eq: "6ifAMUeWooQ04Ecq288ca2"}) {
-      title
-      body {body}
-    }
-    
-    recencies: allContentfulGuidePersonalizationRecency {
-      edges {
-        node {name}
-      }
-    }
-    
-    religions: allContentfulGuidePersonalizationReligion {
-      edges {
-        node {name}
-      }
     }
 
     sections: allContentfulGuideSection (sort: {fields: [order]}) {
@@ -134,4 +88,9 @@ export const query = graphql`
         }
       }
     }
-  }`
+  }
+`
+
+const NavContainer = Box.extend`
+  box-shadow: 0px 0px 15px #bbb;
+`
