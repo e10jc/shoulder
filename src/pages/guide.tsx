@@ -37,7 +37,7 @@ class GuidePage extends React.Component<Props> {
                 <Box px={3} py={4}>
                   <Caps>Timeline</Caps>
                 </Box>
-                {sections.map(({node: {id, title}}) => (
+                {sections && sections.map(({node: {id, title}}) => (
                   <Box bg='red' color='white' key={id} p={4}>
                     <Text>{title}</Text>
                   </Box>
@@ -46,9 +46,9 @@ class GuidePage extends React.Component<Props> {
             </Box>
 
             <Box px={3} width={[1, 1, 3 / 4]}>
-              {sections.map(({node: {blocks, id}}) => (
+              {sections && sections.map(({node: {blocks, id}}) => (
                 <Box key={id}>
-                  {blocks.map(({body: {body}, id, title}) => (
+                  {blocks && blocks.map(({body: {body}, id, title}) => (
                     <Box key={id} mb={3}>
                       <Heading fontSize={4} mb={2}>{title}</Heading>
                       <Markdown source={body} />

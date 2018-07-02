@@ -52,7 +52,7 @@ const HomePage = ({data: {callouts: {edges: callouts}, heroImage, testimonials: 
         <Heading my={3} textAlign='center'>{title}</Heading>
 
         <Flex mb={4}>
-          {callouts.map(({node: {body: {body}, icon: {file: {url: src}, title: alt}, title}}) => (
+          {callouts && callouts.map(({node: {body: {body}, icon: {file: {url: src}, title: alt}, title}}) => (
             <Box key={title} mx='auto' w={[1, 1 / 3]}>
               <Callout body={body} image={{alt, src}} title={title} />
             </Box>
