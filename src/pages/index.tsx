@@ -19,6 +19,7 @@ interface Props {
         }
       }[]
     },
+    heroDefaultBgImage: any,
     heroImage: {
       value: {
         file: {url: string},
@@ -44,9 +45,9 @@ interface Props {
   }
 }
 
-const HomePage = ({data: {callouts: {edges: callouts}, heroImage, testimonials: {edges: testimonials}, title: {value: {value: title}}, homeHero}}: Props) => (
+const HomePage = ({data: {callouts: {edges: callouts}, heroDefaultBgImage, heroImage, testimonials: {edges: testimonials}, title: {value: {value: title}}, homeHero}}: Props) => (
   <Box>
-    <Hero {...homeHero} />
+    <Hero bgImage={heroDefaultBgImage} {...homeHero} />
     <Box>
       <Container maxWidth={800}>
         <Heading my={3} textAlign='center'>{title}</Heading>
@@ -83,6 +84,8 @@ export default HomePage
 
 export const query = graphql`
   query homePageQuery {
+    ...heroDefaultBgImage
+
     homeHero: contentfulHero (contentful_id: {eq: "ngDKvizQGsA8iImmia4yI"}) {
       title
       body {body}
