@@ -5,13 +5,14 @@ import {Box, Button, Container, Heading, Text} from 'rebass'
 
 export interface Props {
   bgImage?: any,
-  title: string,
-  body: {body: string},
-  linkTitle: string,
-  linkUrl: string,
+  content?: any,
+  title?: string,
+  body?: {body: string},
+  linkTitle?: string,
+  linkUrl?: string,
 }
 
-const Hero = ({bgImage, title, body: {body}, linkTitle, linkUrl}: Props) => (
+const Hero = ({bgImage, content, title, body, linkTitle, linkUrl}: Props) => (
   <Box bg='darkGray' color='white' style={{position: 'relative'}}>
     {bgImage && (
       <Img
@@ -23,12 +24,16 @@ const Hero = ({bgImage, title, body: {body}, linkTitle, linkUrl}: Props) => (
 
     <Container maxWidth={600} style={{position: 'relative'}}>
       <Box py={4}>
-        <Heading mb={1}>{title}</Heading>
-        <Text mb={3}>{body}</Text>
-        {linkTitle && linkUrl && (
-          <Link to={linkUrl}>
-            <Button bg='white' color='purple'>{linkTitle}</Button>
-          </Link>
+        {content || (
+          <>
+            <Heading mb={1}>{title}</Heading>
+            <Text mb={3}>{body.body}</Text>
+            {linkTitle && linkUrl && (
+              <Link to={linkUrl}>
+                <Button bg='white' color='purple'>{linkTitle}</Button>
+              </Link>
+            )}
+          </>
         )}
       </Box>
     </Container>

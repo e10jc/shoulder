@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {Box, Button, ButtonOutline, Container, Flex, Heading, Input, Label, Select, Text} from 'rebass'
 
-import {Props as HeroProps} from '../components/hero'
+import Hero, {Props as HeroProps} from '../components/hero'
 import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
 import * as states from '../helpers/united-states.json'
 import {AuthContext} from '../layouts'
@@ -17,6 +17,7 @@ export interface GReligion {
 interface Props {
   currentUser: object,
   data: {
+    heroDefaultBgImage: any,
     recencyHero: HeroProps,
     religionHero: HeroProps,
     signupHero: HeroProps,
@@ -51,11 +52,11 @@ class QuizPage extends React.Component<Props, State> {
   }
 
   render () {
-    const {currentUser, data: {recencyHero, recencies: {edges: recencies}, religionHero, religions: {edges: religions}, signupHero, stateHero}} = this.props
+    const {currentUser, data: {heroDefaultBgImage, recencyHero, recencies: {edges: recencies}, religionHero, religions: {edges: religions}, signupHero, stateHero}} = this.props
     const {recencyInput, religionInput, selRecency, selReligion, selState} = this.state
 
     return (
-      <Box bg='darkGray' color='white' p={4}>
+      <Hero bgImage={heroDefaultBgImage} content={
         <Container maxWidth={800}>
           <Flex mx={-1}>
             <ProgressLineContainer>
@@ -124,7 +125,7 @@ class QuizPage extends React.Component<Props, State> {
             </Box>
           )}
         </Container>
-      </Box>
+      } />
     )
   }
 
@@ -187,6 +188,8 @@ const Body = Text.extend.attrs({mb: 3})``
 
 export const query = graphql`
   query quizQuery {
+    ...heroDefaultBgImage
+
     recencyHero: contentfulHero (contentful_id: {eq: "4nUmmvxpmE8USgo08oKmii"}) {
       title
       body {body}

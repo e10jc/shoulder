@@ -27,6 +27,7 @@ export interface GSection {
 interface Props {
   data: {
     guideHero: HeroProps,
+    heroDefaultBgImage: any,
     sections: GArray<GSection>,
   },
 }
@@ -43,7 +44,7 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   render () {
-    const {data: {guideHero, sections: {edges: sections}}} = this.props
+    const {data: {guideHero, heroDefaultBgImage, sections: {edges: sections}}} = this.props
     const {selBlockIdx, selSectionIdx} = this.state
 
     const activeSection = sections[selSectionIdx]
@@ -51,7 +52,7 @@ class GuidePage extends React.Component<Props, State> {
 
     return (
       <Box>
-        <Hero {...guideHero} />
+        <Hero bgImage={heroDefaultBgImage} {...guideHero} />
         <Container maxWidth={900}>
           <Flex flexWrap='wrap' mx={-3} my={3}>
             <Box px={3} width={[1, 1, 1 / 4]}>
@@ -118,6 +119,8 @@ export default GuidePage
 
 export const query = graphql`
   query guideQuery {
+    ...heroDefaultBgImage
+
     guideHero: contentfulHero (contentful_id: {eq: "3qaxnqaxuooqu8SESGgGMY"}) {
       title
       body {body}
