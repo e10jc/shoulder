@@ -6,9 +6,37 @@ import {AuthContext} from '../layouts/index'
 import {didFinishQuiz} from '../pages/quiz'
 import Div from './div'
 
-export default () => (
-  <AuthContext.Consumer>
-    {({currentUser, logout}) => (
+interface Props {
+  currentUser: object,
+  logout: () => any,
+}
+
+interface State {
+  didFinishQuiz: boolean,
+}
+
+class Header extends React.Component<Props, State> {
+  state = {
+    didFinishQuiz: false,
+  }
+
+  static getDerivedStateFromProps (props, state) {
+    state.didFinishQuiz = didFinishQuiz(props.currentUser)
+    return state
+  }
+
+  componentDidMount () {
+    this.setState({
+      ...this.state,
+      didFinishQuiz: didFinishQuiz(this.props.currentUser),
+    })
+  }
+
+  render () {
+    const {currentUser, logout} = this.props
+    const {didFinishQuiz} = this.state
+
+    return (
       <Box bg='purple'>
         <Flex justifyContent='space-between'>
           <Box>
@@ -18,7 +46,7 @@ export default () => (
           </Box>
           <Div display={['none', 'block']}>
             <Flex>
-              <Link to={didFinishQuiz(currentUser) ? '/guide/' : '/quiz/'}>
+              <Link to={didFinishQuiz ? '/guide/' : '/quiz/'}>
                 <Text color='white' p={3}>Guide</Text>
               </Link>
               <Link to='/about/'>
@@ -40,6 +68,12 @@ export default () => (
           </Div>
         </Flex>
       </Box>
-    )}
+    )
+  }
+}
+
+export default props => (
+  <AuthContext.Consumer>
+    {({currentUser, logout}) => <Header {...props} currentUser={currentUser} logout={logout} />}
   </AuthContext.Consumer>
 )

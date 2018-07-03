@@ -45,15 +45,24 @@ class QuizPage extends React.Component<Props, State> {
     inputPassword: '',
     recencyInput: '',
     religionInput: '',
-    selRecency: getFromLocalStorage(selRecencyKey) || '',
-    selReligion: getFromLocalStorage(selReligionKey) || '',
-    selState: getFromLocalStorage(selStateKey) || '',
+    selRecency: '',
+    selReligion: '',
+    selState: '',
     stateInput: '',
+  }
+
+  componentDidMount () {
+    this.setState({
+      ...this.state,
+      selRecency: getFromLocalStorage(selRecencyKey) || '',
+      selReligion: getFromLocalStorage(selReligionKey) || '',
+      selState: getFromLocalStorage(selStateKey) || '',
+    })
   }
 
   render () {
     const {currentUser, data: {heroDefaultBgImage, recencyHero, recencies: {edges: recencies}, religionHero, religions: {edges: religions}, signupHero, stateHero}} = this.props
-    const {recencyInput, religionInput, selRecency, selReligion, selState} = this.state
+    const {selRecency, selReligion, selState} = this.state
 
     return (
       <Hero bgImage={heroDefaultBgImage} content={
