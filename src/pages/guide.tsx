@@ -26,9 +26,11 @@ export interface GSection {
 
 interface Props {
   data: {
+    guide: {
+      sections: GSection[],
+    },
     guideHero: HeroProps,
     heroDefaultBgImage: any,
-    sections: GArray<GSection>,
   },
 }
 
@@ -44,11 +46,11 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   render () {
-    const {data: {guideHero, heroDefaultBgImage, sections: {edges: sections}}} = this.props
+    const {data: {guideHero, heroDefaultBgImage, guide: {sections}}} = this.props
     const {selBlockIdx, selSectionIdx} = this.state
 
     const activeSection = sections[selSectionIdx]
-    const blocks = activeSection && activeSection.node.blocks
+    const blocks = activeSection && activeSection.blocks
 
     return (
       <Box>
@@ -60,7 +62,7 @@ class GuidePage extends React.Component<Props, State> {
                 <Box px={3} py={4}>
                   <Caps>Timeline</Caps>
                 </Box>
-                {sections && sections.map(({node: {id, title}}, i) => (
+                {sections && sections.map(({id, title}, i) => (
                   <BlockLink
                     bg={selSectionIdx === i ? 'red' : 'white'}
                     color={selSectionIdx === i ? 'white' : 'black'}
@@ -83,7 +85,7 @@ class GuidePage extends React.Component<Props, State> {
                       href='javascript:void(0)'
                       onClick={this.handleBlockTitleClick(j)}
                     >
-                      <Checkbox checked={selBlockIdx >= j} readOnly />
+                      <Checkbox checked={selBlockIdx == null ? false : selBlockIdx >= j} readOnly />
                       {title}
                     </BlockLink>
                   </Heading>
@@ -102,7 +104,7 @@ class GuidePage extends React.Component<Props, State> {
   handleBlockTitleClick = (blockIdx) => () => {
     this.setState({
       ...this.state, 
-      selBlockIdx: blockIdx,
+      selBlockIdx: blockIdx === this.state.selBlockIdx ? null : blockIdx,
     })
   }
 
@@ -128,17 +130,15 @@ export const query = graphql`
       linkTitle
     }
 
-    sections: allContentfulGuideSection (sort: {fields: [order]}) {
-      edges {
-        node {
-          blocks {
-            body {body}
-            id
-            title
-          }
+    guide: contentfulGuide (contentful_id: {eq: "7D3of8RGHmaYsKwYaSE4wA"}) {
+      sections {
+        blocks {
+          body {body}
           id
           title
         }
+        id
+        title
       }
     }
   }
