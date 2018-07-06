@@ -3,38 +3,17 @@ import * as React from 'react'
 import {Box, Flex, Heading, Text} from 'rebass'
 
 import {AuthContext} from '../layouts/index'
-import {didFinishQuiz} from '../pages/quiz'
 import Div from './div'
 
 interface Props {
+  canViewGuide: boolean,
   currentUser: object,
   logout: () => any,
 }
 
-interface State {
-  didFinishQuiz: boolean,
-}
-
-class Header extends React.Component<Props, State> {
-  state = {
-    didFinishQuiz: false,
-  }
-
-  static getDerivedStateFromProps (props, state) {
-    state.didFinishQuiz = didFinishQuiz(props.currentUser)
-    return state
-  }
-
-  componentDidMount () {
-    this.setState({
-      ...this.state,
-      didFinishQuiz: didFinishQuiz(this.props.currentUser),
-    })
-  }
-
+class Header extends React.Component<Props> {
   render () {
-    const {currentUser, logout} = this.props
-    const {didFinishQuiz} = this.state
+    const {canViewGuide, currentUser, logout} = this.props
 
     return (
       <Box bg='purple'>
@@ -46,7 +25,7 @@ class Header extends React.Component<Props, State> {
           </Box>
           <Div display={['none', 'block']}>
             <Flex>
-              <Link to={didFinishQuiz ? '/guide/' : '/quiz/'}>
+              <Link to={canViewGuide ? '/guide/' : '/quiz/'}>
                 <Text color='white' p={3}>Guide</Text>
               </Link>
               <Link to='/about/'>
@@ -74,6 +53,6 @@ class Header extends React.Component<Props, State> {
 
 export default props => (
   <AuthContext.Consumer>
-    {({currentUser, logout}) => <Header {...props} currentUser={currentUser} logout={logout} />}
+    {({canViewGuide, currentUser, logout}) => <Header {...props} canViewGuide={canViewGuide} currentUser={currentUser} logout={logout} />}
   </AuthContext.Consumer>
 )

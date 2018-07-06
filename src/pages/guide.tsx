@@ -1,3 +1,4 @@
+import {navigateTo} from 'gatsby-link'
 import * as React from 'react'
 import * as Markdown from 'react-markdown'
 import {BlockLink, Box, Caps, Checkbox, Container, Flex, Heading, Text} from 'rebass'
@@ -5,6 +6,7 @@ import {injectGlobal} from 'styled-components'
 
 import Hero, {Props as HeroProps} from '../components/hero'
 import Div from '../components/div'
+import {AuthContext} from '../layouts'
 
 injectGlobal`
   .raw-content {
@@ -25,6 +27,7 @@ export interface GSection {
 }
 
 interface Props {
+  canViewGuide: boolean,
   data: {
     guide: {
       sections: GSection[],
@@ -43,6 +46,12 @@ class GuidePage extends React.Component<Props, State> {
   state = {
     selBlockIdx: 0,
     selSectionIdx: 0,
+  }
+
+  componentDidMount () {
+    if (this.props.canViewGuide === false) {
+      navigateTo('/quiz/')
+    }
   }
 
   render () {
@@ -117,8 +126,11 @@ class GuidePage extends React.Component<Props, State> {
   }
 }
 
-export default GuidePage
-
+export default props => (
+  <AuthContext.Consumer>
+    {({canViewGuide}) => <GuidePage {...props} canViewGuide={canViewGuide} />}
+  </AuthContext.Consumer>
+)
 export const query = graphql`
   query guideQuery {
     ...heroDefaultBgImage

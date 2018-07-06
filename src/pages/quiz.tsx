@@ -1,9 +1,11 @@
+import {navigateTo} from 'gatsby-link'
 import * as React from 'react'
 import {Box, Button, ButtonOutline, Container, Flex, Heading, Input, Label, Select, Text} from 'rebass'
 
 import Hero, {Props as HeroProps} from '../components/hero'
 import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
 import * as states from '../helpers/united-states.json'
+import {createLocalStorageKey, selRecencyKey, selReligionKey, selStateKey} from '../helpers/quiz'
 import {AuthContext} from '../layouts'
 
 export interface GRecency {
@@ -151,7 +153,7 @@ class QuizPage extends React.Component<Props, State> {
     e.preventDefault()
     try {
       await this.props.signup(this.state.inputEmail, this.state.inputPassword)
-      window.location.href = '/guide/'
+      navigateTo('/guide/')
     } catch (err) {
       alert(`Error signing up: ${err.message}`)
     }
@@ -173,16 +175,6 @@ export default props => (
   <AuthContext.Consumer>
     {({currentUser, signup}) => <QuizPage {...props} currentUser={currentUser} signup={signup} />}
   </AuthContext.Consumer>
-)
-
-export const createLocalStorageKey = (key: string) => `quiz:${key}`
-
-export const selRecencyKey = createLocalStorageKey('selRecency')
-export const selReligionKey = createLocalStorageKey('selReligion')
-export const selStateKey = createLocalStorageKey('selState')
-
-export const didFinishQuiz = currentUser => !!(
-  currentUser && getFromLocalStorage(selStateKey) && getFromLocalStorage(selReligionKey) && getFromLocalStorage(selRecencyKey)
 )
 
 const ProgressLineContainer = Box.extend.attrs({px: 1, w: 1 / 4})``
