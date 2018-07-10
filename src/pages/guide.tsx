@@ -7,6 +7,7 @@ import {injectGlobal} from 'styled-components'
 import Hero, {Props as HeroProps} from '../components/hero'
 import Div from '../components/div'
 import {AuthContext} from '../layouts'
+import ShareModal from '../modals/share'
 
 injectGlobal`
   .raw-content {
@@ -38,12 +39,14 @@ interface Props {
 }
 
 interface State {
+  isShareModalOpen: boolean,
   selBlockIdx: number,
   selSectionIdx: number,
 }
 
 class GuidePage extends React.Component<Props, State> {
   state = {
+    isShareModalOpen: false,
     selBlockIdx: 0,
     selSectionIdx: 0,
   }
@@ -63,7 +66,7 @@ class GuidePage extends React.Component<Props, State> {
 
     return (
       <Box>
-        <Hero bgImage={heroDefaultBgImage} {...guideHero} />
+        <Hero bgImage={heroDefaultBgImage} handleLinkClick={this.handleShareModalOpen} {...guideHero} />
         <Container maxWidth={900}>
           <Flex flexWrap='wrap' mx={-3} my={3}>
             <Box px={3} width={[1, 1, 1 / 4]}>
@@ -106,6 +109,8 @@ class GuidePage extends React.Component<Props, State> {
             </Box>
           </Flex>
         </Container>
+
+        <ShareModal isOpen={this.state.isShareModalOpen} handleClose={this.handleShareModalClose} />
       </Box>
     )
   }
@@ -124,6 +129,9 @@ class GuidePage extends React.Component<Props, State> {
       selSectionIdx: sectionIdx,
     })
   }
+
+  handleShareModalClose = () => this.setState({...this.state, isShareModalOpen: false})
+  handleShareModalOpen = () => this.setState({...this.state, isShareModalOpen: true})
 }
 
 export default props => (

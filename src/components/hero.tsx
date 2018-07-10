@@ -11,11 +11,12 @@ export interface Props {
   fillVertical?: boolean,
   title?: string,
   body?: {body: string},
+  handleLinkClick?: () => any,
   linkTitle?: string,
   linkUrl?: string,
 }
 
-const Hero = ({bgImage, content, title, body, linkTitle, linkUrl}: Props) => (
+const Hero = ({bgImage, content, title, body, handleLinkClick, linkTitle, linkUrl}: Props) => (
   <Div bg='darkGray' color='white' height='100%' position='relative'>
     {bgImage && (
       <Img
@@ -32,7 +33,7 @@ const Hero = ({bgImage, content, title, body, linkTitle, linkUrl}: Props) => (
             <Heading mb={1}>{title}</Heading>
             <Text mb={3}>{body.body}</Text>
             {linkTitle && linkUrl && (
-              <Link to={linkUrl}>
+              <Link onClick={handleLinkClick} to={handleLinkClick ? '#' : linkUrl}>
                 <Button bg='white' color='purple'>{linkTitle}</Button>
               </Link>
             )}
