@@ -1,5 +1,5 @@
 import {Box} from 'rebass'
-import {display, space} from 'styled-system'
+import {display, height, position} from 'styled-system'
 
 interface Props {
   display: string | string[],
@@ -7,4 +7,6 @@ interface Props {
 
 export default Box.extend<Props>`
   ${display}
+  ${height}
+  ${position}
 `

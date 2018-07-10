@@ -7,7 +7,7 @@ import Header from '../components/header'
 import {didFinishQuiz} from '../helpers/quiz'
 import ConfirmedModal from '../modals/confirm'
 
-const theme = {
+export const theme = {
   colors: {
     darkPurple: '#352734',
     darkWhite: '#F5F5F5',

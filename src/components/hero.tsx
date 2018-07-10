@@ -3,9 +3,12 @@ import Link from 'gatsby-link'
 import * as React from 'react'
 import {Box, Button, Container, Heading, Text} from 'rebass'
 
+import Div from './div'
+
 export interface Props {
   bgImage?: any,
   content?: any,
+  fillVertical?: boolean,
   title?: string,
   body?: {body: string},
   linkTitle?: string,
@@ -13,7 +16,7 @@ export interface Props {
 }
 
 const Hero = ({bgImage, content, title, body, linkTitle, linkUrl}: Props) => (
-  <Box bg='darkGray' color='white' style={{position: 'relative'}}>
+  <Div bg='darkGray' color='white' height='100%' position='relative'>
     {bgImage && (
       <Img
         alt='Background'
@@ -37,7 +40,7 @@ const Hero = ({bgImage, content, title, body, linkTitle, linkUrl}: Props) => (
         )}
       </Box>
     </Container>
-  </Box>
+  </Div>
 )
 
 export default Hero

@@ -88,10 +88,10 @@ class QuizPage extends React.Component<Props, State> {
             <form onSubmit={this.handleSubmit('selState', 'stateInput')}>
               <Title>{stateHero.title}</Title>
               <Body>{stateHero.body.body}</Body>
-              <Select color='black' mb={3} onChange={this.handleStateSelectChange}>
+              <StateSelect color='black' mb={3} onChange={this.handleStateSelectChange}>
                 <option />
                 {Object.keys(states).map(acronym => <option key={acronym} value={acronym}>{states[acronym]}</option>)}
-              </Select>
+              </StateSelect>
               <Button bg='white' color='purple'>Submit</Button>
             </form>
           )}
@@ -136,7 +136,7 @@ class QuizPage extends React.Component<Props, State> {
             </Box>
           )}
         </Container>
-      } />
+      } fillVertical />
     )
   }
 
@@ -178,13 +178,14 @@ export default props => (
 )
 
 const ProgressLineContainer = Box.extend.attrs({px: 1, w: 1 / 4})``
-
 const ProgressLine = Box.extend`
   height: 8px;
 `
-
+const StateSelect = Select.extend`
+  appearance: menulist;
+  background: #fff;
+`
 const Title = Heading.extend.attrs({mt: 2, mb: 2})``
-
 const Body = Text.extend.attrs({mb: 3})``
 
 export const query = graphql`
