@@ -5,7 +5,7 @@ import {Box, Button, ButtonOutline, Container, Flex, Heading, Input, Label, Sele
 import Hero, {Props as HeroProps} from '../components/hero'
 import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
 import * as states from '../helpers/united-states.json'
-import {createLocalStorageKey, selRecencyKey, selReligionKey, selStateKey} from '../helpers/quiz'
+import {createLocalStorageKey, entEmailKey, selRecencyKey, selReligionKey, selStateKey} from '../helpers/quiz'
 import {AuthContext} from '../layouts'
 
 export interface GRecency {
@@ -17,7 +17,7 @@ export interface GReligion {
 }
 
 interface Props {
-  currentUser: object,
+  canViewGuide: boolean,
   data: {
     heroDefaultBgImage: any,
     recencyHero: HeroProps,
@@ -27,12 +27,12 @@ interface Props {
     recencies: GArray<GRecency>,
     religions: GArray<GReligion>,
   },
-  signup: (email: string, password: string) => any,
+  initAuth: () => any,
 }
 
 interface State {
+  entEmail: string,
   inputEmail: string,
-  inputPassword: string,
   recencyInput: string,
   religionInput: string,
   selRecency: string,
@@ -42,9 +42,15 @@ interface State {
 }
 
 class QuizPage extends React.Component<Props, State> {
+  static getDerivedStateFromProps (props) {
+    if (props.canViewGuide) {
+      navigateTo('/guide/')
+    }
+  }
+
   state = {
+    entEmail: '',
     inputEmail: '',
-    inputPassword: '',
     recencyInput: '',
     religionInput: '',
     selRecency: '',
@@ -56,6 +62,7 @@ class QuizPage extends React.Component<Props, State> {
   componentDidMount () {
     this.setState({
       ...this.state,
+      entEmail: getFromLocalStorage(entEmailKey) || '',
       selRecency: getFromLocalStorage(selRecencyKey) || '',
       selReligion: getFromLocalStorage(selReligionKey) || '',
       selState: getFromLocalStorage(selStateKey) || '',
@@ -63,8 +70,8 @@ class QuizPage extends React.Component<Props, State> {
   }
 
   render () {
-    const {currentUser, data: {heroDefaultBgImage, recencyHero, recencies: {edges: recencies}, religionHero, religions: {edges: religions}, signupHero, stateHero}} = this.props
-    const {selRecency, selReligion, selState} = this.state
+    const {data: {heroDefaultBgImage, recencyHero, recencies: {edges: recencies}, religionHero, religions: {edges: religions}, signupHero, stateHero}} = this.props
+    const {entEmail, selRecency, selReligion, selState} = this.state
 
     return (
       <Hero bgImage={heroDefaultBgImage} content={
@@ -86,7 +93,7 @@ class QuizPage extends React.Component<Props, State> {
 
           {!selState && (
             <form onSubmit={this.handleSubmit('selState', 'stateInput')}>
-              <Title>{stateHero.title}</Title>
+              <Title className='serif'>{stateHero.title}</Title>
               <Body>{stateHero.body.body}</Body>
               <StateSelect color='black' mb={3} onChange={this.handleStateSelectChange}>
                 <option />
@@ -98,7 +105,7 @@ class QuizPage extends React.Component<Props, State> {
 
           {selState && !selReligion && (
             <form onSubmit={this.handleSubmit('selReligion', 'religionInput')}>
-              <Title>{religionHero.title}</Title>
+              <Title className='serif'>{religionHero.title}</Title>
               <Body>{religionHero.body.body}</Body>
               <Box mb={3}>
                 {religions.map(({node: {name}}) => (
@@ -111,7 +118,7 @@ class QuizPage extends React.Component<Props, State> {
 
           {selState && selReligion && !selRecency && (
             <form onSubmit={this.handleSubmit('selRecency', 'recencyInput')}>
-              <Title>{recencyHero.title}</Title>
+              <Title className='serif'>{recencyHero.title}</Title>
               <Body>{recencyHero.body.body}</Body>
               <Box mb={3}>
                 {recencies.map(({node: {name}}) => (
@@ -122,15 +129,13 @@ class QuizPage extends React.Component<Props, State> {
             </form>
           )}
 
-          {selState && selReligion && selRecency && !currentUser && (
+          {selState && selReligion && selRecency && !entEmail && (
             <Box>
-              <Title>{signupHero.title}</Title>
+              <Title className='serif'>{signupHero.title}</Title>
               <Body>{signupHero.body.body}</Body>
-              <form onSubmit={this.handleSignupSubmit()}>
+              <form onSubmit={this.handleSubmit('entEmail', 'inputEmail')}>
                 <Label>Email</Label>
                 <Input mb={3} onChange={this.handleInputChange('inputEmail')} type='email' required value={this.state.inputEmail} />
-                <Label>Password</Label>
-                <Input mb={3} onChange={this.handleInputChange('inputPassword')} type='password' required value={this.state.inputPassword} />
                 <Button type='submit'>Submit</Button>
               </form>
             </Box>
@@ -149,16 +154,6 @@ class QuizPage extends React.Component<Props, State> {
     this.setState({...this.state, [stateKey]: stateValue})
   }
 
-  handleSignupSubmit = () => async (e) => {
-    e.preventDefault()
-    try {
-      await this.props.signup(this.state.inputEmail, this.state.inputPassword)
-      navigateTo('/guide/')
-    } catch (err) {
-      alert(`Error signing up: ${err.message}`)
-    }
-  }
-
   handleStateSelectChange = e => {
     this.setState({...this.state, stateInput: e.target.value})
   }
@@ -168,12 +163,13 @@ class QuizPage extends React.Component<Props, State> {
     const value = this.state[fromStateKey]
     this.setState({...this.state, [toStateKey]: value})
     setInLocalStorage(createLocalStorageKey(toStateKey), value)
+    this.props.initAuth()
   }
 }
 
 export default props => (
   <AuthContext.Consumer>
-    {({currentUser, signup}) => <QuizPage {...props} currentUser={currentUser} signup={signup} />}
+    {({canViewGuide, initAuth}) => <QuizPage {...props} canViewGuide={canViewGuide} initAuth={initAuth} />}
   </AuthContext.Consumer>
 )
 

@@ -7,13 +7,11 @@ import Div from './div'
 
 interface Props {
   canViewGuide: boolean,
-  currentUser: object,
-  logout: () => any,
 }
 
 class Header extends React.Component<Props> {
   render () {
-    const {canViewGuide, currentUser, logout} = this.props
+    const {canViewGuide} = this.props
 
     return (
       <Box bg='purple' className='sans-2'>
@@ -31,18 +29,6 @@ class Header extends React.Component<Props> {
               <Link to='/about/'>
                 <Text color='white' p={3}>About</Text>
               </Link>
-              {!currentUser ? (
-                <>
-                  <Link to='/login/'>
-                    <Text color='white' p={3}>Login</Text>
-                  </Link>
-                  <Link to='/signup/'>
-                    <Text bg='lightPurple' color='white' px={4} py={3}>Sign up</Text>
-                  </Link>
-                </>
-              ) : (
-                <Text color='white' p={3} onClick={logout}>Logout</Text>
-              )}
             </Flex>
           </Div>
         </Flex>
@@ -53,6 +39,6 @@ class Header extends React.Component<Props> {
 
 export default props => (
   <AuthContext.Consumer>
-    {({canViewGuide, currentUser, logout}) => <Header {...props} canViewGuide={canViewGuide} currentUser={currentUser} logout={logout} />}
+    {({canViewGuide}) => <Header {...props} canViewGuide={canViewGuide} />}
   </AuthContext.Consumer>
 )
