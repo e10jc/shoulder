@@ -90,7 +90,7 @@ class GuidePage extends React.Component<Props, State> {
             </Box>
 
             <Box px={3} width={[1, 1, 3 / 4]}>
-              {blocks && blocks.map(({body: {body}, id, title}, j) => (
+              {blocks.length && blocks.map(({body, id, title}, j) => (
                 <Div key={id} mb={3}>
                   <Heading fontSize={4} mb={2}>
                     <BlockLink
@@ -102,7 +102,7 @@ class GuidePage extends React.Component<Props, State> {
                     </BlockLink>
                   </Heading>
                   <Div display={selBlockIdx === j ? 'block' : 'none'}>
-                    <Markdown className='raw-content' source={body} />
+                    <Markdown className='raw-content' source={body && body.body} />
                   </Div>
                 </Div>
               ))}
