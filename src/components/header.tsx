@@ -16,11 +16,11 @@ class Header extends React.Component<Props> {
     const {canViewGuide, currentUser, logout} = this.props
 
     return (
-      <Box bg='purple'>
+      <Box bg='purple' className='sans-2'>
         <Flex justifyContent='space-between'>
           <Box>
             <Link to='/'>
-              <Heading color='white' fontSize={3} p={3}>Shoulder.</Heading>
+              <Heading className='serif' color='white' fontSize={3} p={3}>Shoulder.</Heading>
             </Link>
           </Box>
           <Div display={['none', 'block']}>

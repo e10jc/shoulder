@@ -14,6 +14,9 @@ export const theme = {
     lightPurple: '#674A64',
     purple: '#5A4258',
     red: '#FF565C',
+  },
+  fonts: {
+    sans: 'Lato, sans-serif',
   }
 }
 
@@ -21,6 +24,9 @@ injectGlobal`
   a { text-decoration: none }
   html, body { margin: 0 }
   html, body, #___gatsby, #___gatsby > div, #___gatsby > div > div { height: 100% }
+
+  .sans-2 { font-family: 'Open Sans', sans-serif }
+  .serif { font-family: 'Libre Baskerville', serif }
 `
 
 export const AuthContext = React.createContext(null)

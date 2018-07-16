@@ -30,7 +30,7 @@ const Hero = ({bgImage, content, title, body, handleLinkClick, linkTitle, linkUr
       <Box py={4}>
         {content || (
           <>
-            <Heading mb={1}>{title}</Heading>
+            <Heading className='serif' mb={1}>{title}</Heading>
             <Text mb={3}>{body.body}</Text>
             {linkTitle && linkUrl && (
               <Link onClick={handleLinkClick} to={handleLinkClick ? '#' : linkUrl}>
