@@ -1,7 +1,7 @@
 import {navigateTo} from 'gatsby-link'
 import * as React from 'react'
 import * as Markdown from 'react-markdown'
-import {BlockLink, Box, Caps, Checkbox, Container, Flex, Heading, Text} from 'rebass'
+import {BlockLink, Border, Box, Caps, Checkbox, Container, Divider, Flex, Heading, Text} from 'rebass'
 import {injectGlobal} from 'styled-components'
 
 import Hero, {Props as HeroProps} from '../components/hero'
@@ -40,14 +40,16 @@ interface Props {
 
 interface State {
   isShareModalOpen: boolean,
-  selBlockIdx: number,
+  selBlockIdxs: number[],
   selSectionIdx: number,
 }
+
+const BORDER_COLOR = '#f1f1f1'
 
 class GuidePage extends React.Component<Props, State> {
   state = {
     isShareModalOpen: false,
-    selBlockIdx: 0,
+    selBlockIdxs: [0],
     selSectionIdx: 0,
   }
 
@@ -59,7 +61,7 @@ class GuidePage extends React.Component<Props, State> {
 
   render () {
     const {data: {guideHero, heroDefaultBgImage, guide: {sections}}} = this.props
-    const {selBlockIdx, selSectionIdx} = this.state
+    const {selBlockIdxs, selSectionIdx} = this.state
 
     const activeSection = sections[selSectionIdx]
     const blocks = activeSection && activeSection.blocks
@@ -90,22 +92,31 @@ class GuidePage extends React.Component<Props, State> {
             </Box>
 
             <Box px={3} width={[1, 1, 3 / 4]}>
-              {blocks.length && blocks.map(({body, id, title}, j) => (
-                <Div key={id} mb={3}>
-                  <Heading fontSize={4} mb={2}>
-                    <BlockLink
-                      href='javascript:void(0)'
-                      onClick={this.handleBlockTitleClick(j)}
-                    >
-                      <Checkbox checked={selBlockIdx == null ? false : selBlockIdx >= j} readOnly />
-                      {title}
-                    </BlockLink>
-                  </Heading>
-                  <Div display={selBlockIdx === j ? 'block' : 'none'}>
-                    <Markdown className='raw-content' source={body && body.body} />
+              {blocks.length && blocks.map(({body, id, title}, j) => {
+                const isSelected = selBlockIdxs.indexOf(j) !== -1
+                return (
+                  <Div key={id} mb={3}>
+                    <Heading fontSize={4} mb={2}>
+                      <BlockLink
+                        href='javascript:void(0)'
+                        onClick={this.handleBlockTitleClick(j)}
+                      >
+                        <Flex alignItems='center'>
+                          <Checkbox checked={isSelected} readOnly />
+                          <Box flex='1'>{title}</Box>
+                          <TitleArrow direction={isSelected ? 'down' : 'right'} />
+                        </Flex>
+                      </BlockLink>
+                    </Heading>
+                    {!isSelected && <Divider borderColor={BORDER_COLOR} />}
+                    <Div display={isSelected ? 'block' : 'none'}>
+                      <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' pl='22px'>
+                        <Markdown className='raw-content' source={body && body.body} />
+                      </Border>
+                    </Div>
                   </Div>
-                </Div>
-              ))}
+                )
+              })}
             </Box>
           </Flex>
         </Container>
@@ -116,16 +127,18 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   handleBlockTitleClick = (blockIdx) => () => {
+    const {selBlockIdxs} = this.state
+    const idx = selBlockIdxs.indexOf(blockIdx)
     this.setState({
       ...this.state, 
-      selBlockIdx: blockIdx === this.state.selBlockIdx ? null : blockIdx,
+      selBlockIdxs: idx === -1 ? selBlockIdxs.concat(blockIdx) : selBlockIdxs.filter((_, x) => x !== idx),
     })
   }
 
   handleSectionClick = (sectionIdx) => () => {
     this.setState({
       ...this.state, 
-      selBlockIdx: 0,
+      selBlockIdxs: [0],
       selSectionIdx: sectionIdx,
     })
   }
@@ -166,4 +179,12 @@ export const query = graphql`
 
 const NavContainer = Box.extend`
   box-shadow: 0px 0px 15px #bbb;
+`
+
+const TitleArrow = Box.extend`
+  &:after {
+    content: ">";
+    display: block;
+    transform: rotate(${(props) => props.direction === 'down' ? '90deg' : '0deg'});
+  }
 `
