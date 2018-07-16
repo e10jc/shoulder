@@ -50,26 +50,24 @@ const HomePage = ({data: {callouts: {edges: callouts}, heroDefaultBgImage, heroI
     <Hero bgImage={heroDefaultBgImage} {...homeHero} />
     <Box>
       <Container maxWidth={800}>
-        <Heading my={3} textAlign='center'>{title}</Heading>
+        <Heading className='serif' my={4} textAlign='center'>{title}</Heading>
 
         <Flex flexWrap='wrap' mb={4} mx={-3}>
           {callouts && callouts.map(({node: {body: {body}, icon: {file: {url: src}, title: alt}, title}}) => (
-            <Box key={title} mx='auto' px={3} w={[1, 1 / 3]}>
+            <Box key={title} mb={3} mx='auto' px={3} w={[1, 1 / 3]}>
               <Callout body={body} image={{alt, src}} title={title} />
             </Box>
           ))}
         </Flex>
 
-        <Box>
-          <Image alt={heroImage.value.title} src={heroImage.value.file.url} />
-        </Box>
+        <Image alt={heroImage.value.title} mb={4} src={heroImage.value.file.url} />
       </Container>
 
-      <Box bg='darkWhite'>
+      <Box bg='darkWhite' pt={4}>
         <Container maxWidth={800}>
-          <Flex px={2}>
+          <Flex flexWrap='wrap' mx={-2}>
             {testimonials.map(({node: {body: {body}, name, photo: {file: {url: src}, title: alt}}}) => (
-              <Box key={title} mx={-2} my={3} w={[1, 1 / 3]}>
+              <Box key={title} mb={3} px={2} w={[1, 1 / 3]}>
                 <Testimonial body={body} image={{alt, src}} name={name} />
               </Box>
             ))}
