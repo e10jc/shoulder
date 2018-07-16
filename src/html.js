@@ -1,5 +1,7 @@
 import React from "react"
 
+import klaviyo from './helpers/klaviyo'
+
 let stylesStr
 if (process.env.NODE_ENV === `production`) {
   try {
@@ -41,6 +43,7 @@ module.exports = class HTML extends React.Component {
             dangerouslySetInnerHTML={{ __html: this.props.body }}
           />
           {this.props.postBodyComponents}
+          <script dangerouslySetInnerHTML={{__html: klaviyo}} />
         </body>
       </html>
     )

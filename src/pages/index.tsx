@@ -67,7 +67,7 @@ const HomePage = ({data: {callouts: {edges: callouts}, heroDefaultBgImage, heroI
         <Container maxWidth={800}>
           <Flex flexWrap='wrap' mx={-2}>
             {testimonials.map(({node: {body: {body}, name, photo: {file: {url: src}, title: alt}}}) => (
-              <Box key={title} mb={3} px={2} w={[1, 1 / 3]}>
+              <Box key={name} mb={3} px={2} w={[1, 1 / 3]}>
                 <Testimonial body={body} image={{alt, src}} name={name} />
               </Box>
             ))}
