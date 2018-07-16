@@ -46,6 +46,7 @@ class QuizPage extends React.Component<Props, State> {
     if (props.canViewGuide) {
       navigateTo('/guide/')
     }
+    return props
   }
 
   state = {
@@ -160,10 +161,25 @@ class QuizPage extends React.Component<Props, State> {
 
   handleSubmit = (toStateKey: string, fromStateKey: string) => (e) => {
     e.preventDefault()
+
+    // save the answer locally
     const value = this.state[fromStateKey]
     this.setState({...this.state, [toStateKey]: value})
     setInLocalStorage(createLocalStorageKey(toStateKey), value)
-    this.props.initAuth()
+
+    // if the quiz is completed
+    if (toStateKey === 'entEmail') {
+      // redirect to guide
+      this.props.initAuth()
+
+      // save in klaviyo
+      window._learnq.push(['identify', {
+        '$email': value,
+        'Quiz: Recency': this.state.selRecency,
+        'Quiz: Religion': this.state.selReligion,
+        'Quiz: State': this.state.selState,
+      }])
+    }
   }
 }
 
