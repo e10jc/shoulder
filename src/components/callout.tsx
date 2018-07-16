@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Box, Image, Text} from 'rebass'
+import {BackgroundImage, Box, Heading, Text} from 'rebass'
 
 interface Props {
   body: string,
@@ -12,8 +12,8 @@ interface Props {
 
 export default ({body, image, title}: Props) => (
   <Box>
-    <Image alt={image.alt} mx='auto' src={image.src} />
-    <Text textAlign='center' fontSize={3} fontWeight='bold'>{title}</Text>
+    <BackgroundImage image={image.src} ratio={1} />
+    <Heading className='serif' textAlign='center' fontSize={3} my={2}>{title}</Heading>
     <Text textAlign='center'>{body}</Text>
   </Box>
 )

@@ -52,9 +52,9 @@ const HomePage = ({data: {callouts: {edges: callouts}, heroDefaultBgImage, heroI
       <Container maxWidth={800}>
         <Heading my={3} textAlign='center'>{title}</Heading>
 
-        <Flex mb={4}>
+        <Flex flexWrap='wrap' mb={4} mx={-3}>
           {callouts && callouts.map(({node: {body: {body}, icon: {file: {url: src}, title: alt}, title}}) => (
-            <Box key={title} mx='auto' w={[1, 1 / 3]}>
+            <Box key={title} mx='auto' px={3} w={[1, 1 / 3]}>
               <Callout body={body} image={{alt, src}} title={title} />
             </Box>
           ))}
