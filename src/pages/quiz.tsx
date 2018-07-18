@@ -6,7 +6,7 @@ import Hero, {Props as HeroProps} from '../components/hero'
 import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
 import * as states from '../helpers/united-states.json'
 import {createLocalStorageKey, entEmailKey, selRecencyKey, selReligionKey, selStateKey} from '../helpers/quiz'
-import {AuthContext} from '../layouts'
+import {AuthContext, PAGE_WIDTH} from '../layouts'
 
 export interface GRecency {
   name: string,
@@ -76,7 +76,7 @@ class QuizPage extends React.Component<Props, State> {
 
     return (
       <Hero bgImage={heroDefaultBgImage} content={
-        <Container maxWidth={800}>
+        <Container maxWidth={PAGE_WIDTH}>
           <Flex mx={-1}>
             <ProgressLineContainer>
               <ProgressLine bg='red'>&nbsp;</ProgressLine>

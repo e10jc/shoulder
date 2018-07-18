@@ -1,9 +1,11 @@
+import GImage from 'gatsby-image'
 import * as React from 'react'
 import {Box, Container, Flex, Heading, Image} from 'rebass'
 
 import Callout from '../components/callout'
 import Hero, {Props as HeroProps} from '../components/hero'
 import Testimonial from '../components/testimonial'
+import {PAGE_WIDTH} from '../layouts'
 
 interface Props {
   data: {
@@ -19,6 +21,7 @@ interface Props {
         }
       }[]
     },
+    dotsImage: any,
     heroDefaultBgImage: any,
     heroImage: {
       value: {
@@ -45,12 +48,21 @@ interface Props {
   }
 }
 
-const HomePage = ({data: {callouts: {edges: callouts}, heroDefaultBgImage, heroImage, testimonials: {edges: testimonials}, title: {value: {value: title}}, homeHero}}: Props) => (
+const HomePage = ({data: {callouts: {edges: callouts}, dotsImage, heroDefaultBgImage, heroImage, testimonials: {edges: testimonials}, title: {value: {value: title}}, homeHero}}: Props) => (
   <Box>
     <Hero bgImage={heroDefaultBgImage} {...homeHero} />
     <Box>
-      <Container maxWidth={800}>
-        <Heading className='serif' my={4} textAlign='center'>{title}</Heading>
+      <Container maxWidth={PAGE_WIDTH}>
+        <Box mx='auto' width={['100%', '75%']}>
+          <Heading className='serif' dangerouslySetInnerHTML={{__html: title}} my={4} textAlign='center' />
+        </Box>
+
+        <Box mx='auto' my={4} width='50px'>
+          <GImage
+            alt='Dots'
+            sizes={dotsImage.childImageSharp.sizes}
+          />
+        </Box>
 
         <Flex flexWrap='wrap' mb={4} mx={-3}>
           {callouts && callouts.map(({node: {body: {body}, icon: {file: {url: src}, title: alt}, title}}) => (
@@ -64,7 +76,7 @@ const HomePage = ({data: {callouts: {edges: callouts}, heroDefaultBgImage, heroI
       </Container>
 
       <Box bg='darkWhite' pt={4}>
-        <Container maxWidth={800}>
+        <Container maxWidth={PAGE_WIDTH}>
           <Flex flexWrap='wrap' mx={-2}>
             {testimonials.map(({node: {body: {body}, name, photo: {file: {url: src}, title: alt}}}) => (
               <Box key={name} mb={3} px={2} w={[1, 1 / 3]}>
@@ -83,6 +95,14 @@ export default HomePage
 export const query = graphql`
   query homePageQuery {
     ...heroDefaultBgImage
+
+    dotsImage: file (relativePath: {eq: "dots.png"}) {
+      childImageSharp {
+        sizes(maxWidth: 50) {
+          ...GatsbyImageSharpSizes
+        }
+      }
+    }
 
     homeHero: contentfulHero (contentful_id: {eq: "ngDKvizQGsA8iImmia4yI"}) {
       title

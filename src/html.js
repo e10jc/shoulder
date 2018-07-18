@@ -33,7 +33,7 @@ module.exports = class HTML extends React.Component {
           />
           {this.props.headComponents}
           {css}
-          <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Libre+Baskerville:400,700|Open+Sans:400,700" rel="stylesheet" />
+          <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Libre+Baskerville:400,700" rel="stylesheet" />
         </head>
         <body {...this.props.bodyAttributes}>
           {this.props.preBodyComponents}

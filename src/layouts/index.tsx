@@ -13,11 +13,14 @@ export const theme = {
     lightPurple: '#674A64',
     purple: '#5A4258',
     red: '#FF565C',
+    yellow: '#EDB732',
   },
   fonts: {
     sans: 'Lato, sans-serif',
   }
 }
+
+export const PAGE_WIDTH = 900
 
 injectGlobal`
   a { text-decoration: none }
@@ -26,6 +29,9 @@ injectGlobal`
 
   .sans-2 { font-family: 'Open Sans', sans-serif }
   .serif { font-family: 'Libre Baskerville', serif }
+
+  .red { color: ${theme.colors.red} }
+  .yellow { color: ${theme.colors.yellow} }
 `
 
 export const AuthContext = React.createContext(null)
