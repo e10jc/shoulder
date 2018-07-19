@@ -35,17 +35,13 @@ const Hero = ({bgImage, buttonAlign, content, title, body, handleLinkClick, link
         {content || (
           <>
             <Heading className='serif' dangerouslySetInnerHTML={{__html: title}} mb={1} />
-            <Flex flexWrap='wrap' justifyContent='space-between'>
-              <Box width={buttonAlign !== 'right' ? 1 : null}>
-                <Text mb={3}>{body.body}</Text>
-              </Box>
-              <Box width={buttonAlign !== 'right' ? 1 : null}>
-                {linkTitle && linkUrl && (
-                  <Link onClick={handleLinkClick} to={handleLinkClick ? '#' : linkUrl}>
-                    <Button bg='white' color='purple' px={5} py={2}>{linkTitle}</Button>
-                  </Link>
-                )}
-              </Box>
+            <Flex flexWrap={['wrap', 'wrap', buttonAlign === 'right' ? 'nowrap' : null]} justifyContent='space-between'>
+              <Text mb={3}>{body.body}</Text>
+              {linkTitle && linkUrl && (
+                <Link onClick={handleLinkClick} to={handleLinkClick ? '#' : linkUrl}>
+                  <Button bg='white' color='purple' px={5} py={2} style={{whiteSpace: 'nowrap'}}>{linkTitle}</Button>
+                </Link>
+              )}
             </Flex>
           </>
         )}
