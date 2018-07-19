@@ -1,5 +1,6 @@
 import GImage from 'gatsby-image'
 import * as React from 'react'
+import {Helmet} from 'react-helmet'
 import {Box, Container, Flex, Heading, Image} from 'rebass'
 
 import Callout from '../components/callout'
@@ -50,6 +51,10 @@ interface Props {
 
 const HomePage = ({data: {callouts: {edges: callouts}, dotsImage, heroDefaultBgImage, heroImage, testimonials: {edges: testimonials}, title: {value: {value: title}}, homeHero}}: Props) => (
   <Box>
+    <Helmet>
+      <title>Shoulder</title>
+    </Helmet>
+
     <Hero bgImage={heroDefaultBgImage} {...homeHero} />
     <Box>
       <Container maxWidth={PAGE_WIDTH}>
