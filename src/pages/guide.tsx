@@ -6,6 +6,7 @@ import {injectGlobal} from 'styled-components'
 
 import Hero, {Props as HeroProps} from '../components/hero'
 import Div from '../components/div'
+import Meta from '../components/meta'
 import {AuthContext} from '../layouts'
 import ShareModal from '../modals/share'
 
@@ -30,10 +31,21 @@ export interface GSection {
 interface Props {
   canViewGuide: boolean,
   data: {
-    guide: {
-      sections: GSection[],
+    contentfulGuidePage: {
+      hero: HeroProps,
+      meta: Meta,
+      sections: {
+        blocks: {
+          body: {
+            body: string,
+          },
+          id: string,
+          title: string,
+        }[],
+        id: string,
+        title: string,
+      }[],
     },
-    guideHero: HeroProps,
     heroDefaultBgImage: any,
   },
 }
@@ -60,7 +72,7 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   render () {
-    const {data: {guideHero, heroDefaultBgImage, guide: {sections}}} = this.props
+    const {data: {contentfulGuidePage: {hero, meta, sections}, heroDefaultBgImage}} = this.props
     const {selBlockIdxs, selSectionIdx} = this.state
 
     const activeSection = sections[selSectionIdx]
@@ -68,7 +80,9 @@ class GuidePage extends React.Component<Props, State> {
 
     return (
       <Box>
-        <Hero bgImage={heroDefaultBgImage} buttonAlign='right' handleLinkClick={this.handleShareModalOpen} py={4} {...guideHero} />
+        <Meta meta={meta} />
+
+        <Hero bgImage={heroDefaultBgImage} buttonAlign='right' handleLinkClick={this.handleShareModalOpen} py={4} {...hero} />
 
         <Flex flexWrap='wrap'>
           <Box bg='purple' color='white' width={[1, 1 / 4]}>
@@ -168,14 +182,23 @@ export const query = graphql`
   query guideQuery {
     ...heroDefaultBgImage
 
-    guideHero: contentfulHero (contentful_id: {eq: "3qaxnqaxuooqu8SESGgGMY"}) {
-      title
-      body {body}
-      linkUrl
-      linkTitle
-    }
-
-    guide: contentfulGuide (contentful_id: {eq: "7D3of8RGHmaYsKwYaSE4wA"}) {
+    contentfulGuidePage (contentful_id: {eq: "7D3of8RGHmaYsKwYaSE4wA"}) {
+      hero {
+        title
+        body {body}
+        linkUrl
+        linkTitle
+      }
+      
+      meta {
+        description
+        image {
+          title
+          file {url}
+        }
+        title
+      }
+      
       sections {
         blocks {
           body {body}
