@@ -66,7 +66,7 @@ const HomePage = ({data: {callouts: {edges: callouts}, dotsImage, heroDefaultBgI
 
         <Flex flexWrap='wrap' mb={4} mx={-3}>
           {callouts && callouts.map(({node: {body: {body}, icon: {file: {url: src}, title: alt}, title}}) => (
-            <Box key={title} mb={3} mx='auto' px={3} w={[1, 1 / 3]}>
+            <Box key={title} mb={3} mx='auto' px={3} width={[1, 1 / 3]}>
               <Callout body={body} image={{alt, src}} title={title} />
             </Box>
           ))}
@@ -79,7 +79,7 @@ const HomePage = ({data: {callouts: {edges: callouts}, dotsImage, heroDefaultBgI
         <Container maxWidth={PAGE_WIDTH}>
           <Flex flexWrap='wrap' mx={-2}>
             {testimonials.map(({node: {body: {body}, name, photo: {file: {url: src}, title: alt}}}) => (
-              <Box key={name} mb={3} px={2} w={[1, 1 / 3]}>
+              <Box key={name} mb={3} px={2} width={[1, 1 / 3]}>
                 <Testimonial body={body} image={{alt, src}} name={name} />
               </Box>
             ))}

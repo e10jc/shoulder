@@ -27,8 +27,9 @@
     "react-dom": "^16.4.1",
     "react-markdown": "^3.3.4",
     "react-modal": "^3.4.5",
-    "rebass": "^2.0.0-9",
+    "rebass": "^2.0.0-10",
     "styled-components": "^3.3.3",
+    "styled-system": "^3.0.2",
     "typescript": "^2.9.2"
   },
   "devDependencies": {

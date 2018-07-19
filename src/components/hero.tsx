@@ -24,7 +24,7 @@ const Hero = ({bgImage, buttonAlign, content, title, body, handleLinkClick, link
     {bgImage && (
       <GImage
         alt='Background'
-        imgStyle={{'object-position': 'center bottom'}}
+        imgStyle={{objectPosition: 'center bottom'}}
         sizes={bgImage.childImageSharp.sizes}
         style={{position: 'absolute', width: '100%', height: '100%'}}
       />
@@ -36,10 +36,10 @@ const Hero = ({bgImage, buttonAlign, content, title, body, handleLinkClick, link
           <>
             <Heading className='serif' dangerouslySetInnerHTML={{__html: title}} mb={1} />
             <Flex flexWrap='wrap' justifyContent='space-between'>
-              <Box w={buttonAlign !== 'right' && 1}>
+              <Box width={buttonAlign !== 'right' ? 1 : null}>
                 <Text mb={3}>{body.body}</Text>
               </Box>
-              <Box w={buttonAlign !== 'right' && 1}>
+              <Box width={buttonAlign !== 'right' ? 1 : null}>
                 {linkTitle && linkUrl && (
                   <Link onClick={handleLinkClick} to={handleLinkClick ? '#' : linkUrl}>
                     <Button bg='white' color='purple' px={5} py={2}>{linkTitle}</Button>

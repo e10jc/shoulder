@@ -71,36 +71,38 @@ class GuidePage extends React.Component<Props, State> {
         <Hero bgImage={heroDefaultBgImage} buttonAlign='right' handleLinkClick={this.handleShareModalOpen} py={4} {...guideHero} />
 
         <Flex flexWrap='wrap'>
-          <Box bg='purple' color='white' width={[1, 1, 1 / 4]}>
-            <Box px={3} py={4}>
-              <Caps>Timeline</Caps>
-            </Box>
+          <Box bg='purple' color='white' width={[1, 1 / 4]}>
             {sections && sections.map(({id, title}, i) => (
               <Border border='none' borderBottom='1px solid' borderColor='rgba(255,255,255,0.15)' key={id}>
                 <BlockLink
-                  bg={selSectionIdx === i ? 'red' : null}
+                  bg={(() => {
+                    if (selSectionIdx === i) return 'red'
+                    if (i === sections.length - 1) return 'lightPurple'
+                    return 'purple'
+                  })()}
                   color='white'
                   href='javascript:void(0)'
                   onClick={this.handleSectionClick(i)}
-                  p={4}
+                  px={3}
+                  py={4}
                 >
-                  <Text>{title}</Text>
+                  {(() => {
+                    switch (i) {
+                      case 0: return <Caps fontWeight='bold'>Timeline</Caps>
+                      case sections.length - 1: return <Caps fontWeight='bold'>Pricing Guide</Caps>
+                      default: return (
+                        <Text>
+                          <Div display='inline' pr={2} style={{opacity: '0.25'}}>{i}</Div> {title}
+                        </Text>
+                      )
+                    }
+                  })()}
                 </BlockLink>
               </Border>
             ))}
-            <Border border='none' borderBottom='1px solid' borderColor='rgba(255,255,255,0.15)'>
-              <BlockLink
-                bg='lightPurple'
-                color='white'
-                href='javascript:void(0)'
-                p={4}
-              >
-                <Caps>Pricing Guide</Caps>
-              </BlockLink>
-            </Border>
           </Box>
 
-          <Box width={[1, 1, 3 / 4]}>
+          <Box width={[1, 3 / 4]}>
             <Box p={4}>
               {blocks.length && blocks.map(({body, id, title}, j) => {
                 const isSelected = selBlockIdxs.indexOf(j) !== -1
