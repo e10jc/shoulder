@@ -1,13 +1,14 @@
 import GImage from 'gatsby-image'
 import Link from 'gatsby-link'
 import * as React from 'react'
-import {Box, Button, Container, Heading, Text} from 'rebass'
+import {Box, Button, Container, Flex, Heading, Text} from 'rebass'
 
 import Div from './div'
 import {PAGE_WIDTH} from '../layouts'
 
 export interface Props {
   bgImage?: any,
+  buttonAlign?: string,
   content?: any,
   fillVertical?: boolean,
   title?: string,
@@ -15,9 +16,10 @@ export interface Props {
   handleLinkClick?: () => any,
   linkTitle?: string,
   linkUrl?: string,
+  py?: any,
 }
 
-const Hero = ({bgImage, content, title, body, handleLinkClick, linkTitle, linkUrl}: Props) => (
+const Hero = ({bgImage, buttonAlign, content, title, body, handleLinkClick, linkTitle, linkUrl, py}: Props) => (
   <Div bg='darkGray' color='white' height='100%' position='relative'>
     {bgImage && (
       <GImage
@@ -29,16 +31,22 @@ const Hero = ({bgImage, content, title, body, handleLinkClick, linkTitle, linkUr
     )}
 
     <Container maxWidth={PAGE_WIDTH} style={{position: 'relative'}}>
-      <Box py={5}>
+      <Box py={py || 5}>
         {content || (
           <>
             <Heading className='serif' dangerouslySetInnerHTML={{__html: title}} mb={1} />
-            <Text mb={3}>{body.body}</Text>
-            {linkTitle && linkUrl && (
-              <Link onClick={handleLinkClick} to={handleLinkClick ? '#' : linkUrl}>
-                <Button bg='white' color='purple' px={5} py={2}>{linkTitle}</Button>
-              </Link>
-            )}
+            <Flex flexWrap='wrap' justifyContent='space-between'>
+              <Box w={buttonAlign !== 'right' && 1}>
+                <Text mb={3}>{body.body}</Text>
+              </Box>
+              <Box w={buttonAlign !== 'right' && 1}>
+                {linkTitle && linkUrl && (
+                  <Link onClick={handleLinkClick} to={handleLinkClick ? '#' : linkUrl}>
+                    <Button bg='white' color='purple' px={5} py={2}>{linkTitle}</Button>
+                  </Link>
+                )}
+              </Box>
+            </Flex>
           </>
         )}
       </Box>

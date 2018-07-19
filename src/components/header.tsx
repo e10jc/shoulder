@@ -28,7 +28,7 @@ class Header extends React.Component<Props> {
 
     return (
       <Box bg='purple' className='sans-2'>
-        <Flex justifyContent='space-between'>
+        <Flex alignItems='center' justifyContent='space-between'>
           <Box>
             <Link to='/'>
               <Heading className='serif' color='white' fontSize={3} p={3}>Shoulder.</Heading>
