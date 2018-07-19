@@ -6,6 +6,17 @@ interface GArray<T> {
   }[],
 }
 
+interface Meta {
+  description: string,
+  image: {
+    title: string,
+    file: {
+      url: string,
+    },
+  },
+  title: string,
+}
+
 interface Window {
   _learnq: any,
 }

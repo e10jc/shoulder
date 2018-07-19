@@ -1,10 +1,10 @@
 import GImage from 'gatsby-image'
 import * as React from 'react'
-import {Helmet} from 'react-helmet'
 import {Box, Container, Flex, Heading, Image} from 'rebass'
 
 import Callout from '../components/callout'
 import Hero, {Props as HeroProps} from '../components/hero'
+import Meta from '../components/meta'
 import Testimonial from '../components/testimonial'
 import {PAGE_WIDTH} from '../layouts'
 
@@ -27,16 +27,7 @@ interface Props {
       lede: {
         lede: string,
       },
-      meta: {
-        description: string,
-        image: {
-          title: string,
-          file: {
-            url: string,
-          },
-        },
-        title: string,
-      },
+      meta: Meta,
       testimonials: {
         body: {body: string},
         name: string,
@@ -55,6 +46,7 @@ const HomePage = ({
   data: {
     contentfulHomePage: {
       callouts,
+      meta,
       hero,
       heroImage,
       lede: {lede},
@@ -65,9 +57,7 @@ const HomePage = ({
   }
 }: Props) => (
   <Box>
-    <Helmet>
-      <title>Shoulder</title>
-    </Helmet>
+    <Meta meta={meta} />
 
     <Hero bgImage={heroDefaultBgImage} {...hero} />
     <Box>
