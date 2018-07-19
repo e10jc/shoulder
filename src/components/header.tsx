@@ -1,4 +1,4 @@
-import Link from 'gatsby-link'
+import Link, {navigateTo} from 'gatsby-link'
 import * as React from 'react'
 import {Box, Drawer, Flex, Heading, Text} from 'rebass'
 
@@ -31,14 +31,14 @@ class Header extends React.Component<Props> {
         <Flex alignItems='center' justifyContent='space-between'>
           <Box>
             <Link to='/'>
-              <Heading className='serif' color='white' fontSize={3} p={3}>Shoulder.</Heading>
+              <Heading className='serif' color='white' fontSize={3} lineHeight={1} p={3}>Shoulder.</Heading>
             </Link>
           </Box>
           <Div display={['none', 'block']}>
             <Flex>
               {links.map(([to, text]) => (
                 <Link key={to} to={to}>
-                  <Text color='white' p={3}>{text}</Text>
+                  <Text color='white' lineHeight={1} p={3}>{text}</Text>
                 </Link>
               ))}
             </Flex>
@@ -62,9 +62,9 @@ class Header extends React.Component<Props> {
             <Text color='white' p={3}>Close</Text>
           </a>
           {links.map(([to, text]) => (
-            <Link key={to} to={to}>
+            <a href='javascript:void(0)' key={to} onClick={this.navigateAndCloseMenu(to)}>
               <Text color='white' p={3}>{text}</Text>
-            </Link>
+            </a>
           ))}
         </Drawer>
       </Box>
@@ -77,6 +77,11 @@ class Header extends React.Component<Props> {
 
   handleMobileMenuOpen = () => {
     this.setState({...this.state, isMobileMenuOpen: true})
+  }
+
+  navigateAndCloseMenu = to => () => {
+    this.handleMobileMenuClose()
+    navigateTo(to)
   }
 }
 
