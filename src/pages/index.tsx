@@ -10,56 +10,70 @@ import {PAGE_WIDTH} from '../layouts'
 
 interface Props {
   data: {
-    callouts: {
-      edges: {
-        node: {
-          body: {body: string},
-          icon: {
-            file: {url: string},
-            title: string,
-          },
+    contentfulHomePage: {
+      callouts: {
+        body: {body: string},
+        icon: {
+          file: {url: string},
           title: string,
-        }
-      }[]
+        },
+        title: string,
+      }[],
+      hero: HeroProps,
+      heroImage: {
+        file: {url: string},
+        title: string,
+      },
+      lede: {
+        lede: string,
+      },
+      meta: {
+        description: string,
+        image: {
+          title: string,
+          file: {
+            url: string,
+          },
+        },
+        title: string,
+      },
+      testimonials: {
+        body: {body: string},
+        name: string,
+        photo: {
+          file: {url: string},
+          title: string,
+        },
+      }[],
     },
     dotsImage: any,
     heroDefaultBgImage: any,
-    heroImage: {
-      value: {
-        file: {url: string},
-        title: string,
-      }
-    },
-    testimonials: {
-      edges: {
-        node: {
-          body: {body: string},
-          name: string,
-          photo: {
-            file: {url: string},
-            title: string,
-          },
-        }
-      }[],
-    },
-    title: {
-      value: {value: string}
-    },
-    homeHero: HeroProps,
   }
 }
 
-const HomePage = ({data: {callouts: {edges: callouts}, dotsImage, heroDefaultBgImage, heroImage, testimonials: {edges: testimonials}, title: {value: {value: title}}, homeHero}}: Props) => (
+const HomePage = ({
+  data: {
+    contentfulHomePage: {
+      callouts,
+      hero,
+      heroImage,
+      lede: {lede},
+      testimonials,
+    }, 
+    dotsImage, 
+    heroDefaultBgImage, 
+  }
+}: Props) => (
   <Box>
     <Helmet>
       <title>Shoulder</title>
     </Helmet>
 
-    <Hero bgImage={heroDefaultBgImage} {...homeHero} />
+    <Hero bgImage={heroDefaultBgImage} {...hero} />
     <Box>
       <Container maxWidth={PAGE_WIDTH}>
         <Box mx='auto' width={['100%', '75%']}>
-          <Heading className='serif' dangerouslySetInnerHTML={{__html: title}} my={4} textAlign='center' />
+          <Heading className='serif' dangerouslySetInnerHTML={{__html: lede}} my={4} textAlign='center' />
         </Box>
 
         <Box mx='auto' my={4} width='50px'>
@@ -70,20 +84,20 @@ const HomePage = ({data: {callouts: {edges: callouts}, dotsImage, heroDefaultBgI
         </Box>
 
         <Flex flexWrap='wrap' mb={4} mx={-3}>
-          {callouts && callouts.map(({node: {body: {body}, icon: {file: {url: src}, title: alt}, title}}) => (
+          {callouts && callouts.map(({body: {body}, icon: {file: {url: src}, title: alt}, title}) => (
             <Box key={title} mb={3} mx='auto' px={3} width={[1, 1 / 3]}>
               <Callout body={body} image={{alt, src}} title={title} />
             </Box>
           ))}
         </Flex>
 
-        <Image alt={heroImage.value.title} mb={4} src={heroImage.value.file.url} />
+        <Image alt={heroImage.title} mb={4} src={heroImage.file.url} />
       </Container>
 
       <Box bg='darkWhite' pt={4}>
         <Container maxWidth={PAGE_WIDTH}>
           <Flex flexWrap='wrap' mx={-2}>
-            {testimonials.map(({node: {body: {body}, name, photo: {file: {url: src}, title: alt}}}) => (
+            {testimonials.map(({body: {body}, name, photo: {file: {url: src}, title: alt}}) => (
               <Box key={name} mb={3} px={2} width={[1, 1 / 3]}>
                 <Testimonial body={body} image={{alt, src}} name={name} />
               </Box>
@@ -109,46 +123,45 @@ export const query = graphql`
       }
     }
 
-    homeHero: contentfulHero (contentful_id: {eq: "ngDKvizQGsA8iImmia4yI"}) {
-      title
-      body {body}
-      linkUrl
-      linkTitle
-    }
+    contentfulHomePage (contentful_id: {eq: "5dToGykxfUYqegYUsQK2qy"}) {
+      callouts {
+        icon {
+          title
+          file {url}
+        }
+        body {body}
+        title
+      }
 
-    title: contentfulCopy (key: {eq: "Home Page Title"}) {
-      value {value}
-    }
-
-    heroImage: contentfulImage (key: {eq: "Home Page Hero"}) {
-      value {
+      hero {
+        title
+        body {body}
+        linkUrl
+        linkTitle
+      }
+  
+      heroImage {
         title
         file {url}
       }
-    }
-
-    callouts: allContentfulHomePageCallout {
-      edges {
-        node {
-          icon {
-            title
-            file {url}
-          }
-          body {body}
+  
+      lede {lede}
+  
+      meta {
+        description
+        image {
           title
+          file {url}
         }
+        title
       }
-    }
-
-    testimonials: allContentfulTestimonial {
-      edges {
-        node {
-          body {body}
-          name
-          photo {
-            title
-            file {url}
-          }
+  
+      testimonials {
+        body {body}
+        name
+        photo {
+          title
+          file {url}
         }
       }
     }
