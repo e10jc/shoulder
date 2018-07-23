@@ -1,4 +1,5 @@
 import {navigateTo} from 'gatsby-link'
+import * as qs from 'qs'
 import * as React from 'react'
 import * as Markdown from 'react-markdown'
 import {BlockLink, Border, Box, Caps, Checkbox, Container, Divider, Flex, Heading, Text} from 'rebass'
@@ -52,6 +53,7 @@ interface Props {
 
 interface State {
   isShareModalOpen: boolean,
+  query: object,
   selBlockIdxs: number[],
   selSectionIdx: number,
 }
@@ -59,10 +61,15 @@ interface State {
 const BORDER_COLOR = '#f1f1f1'
 
 class GuidePage extends React.Component<Props, State> {
-  state = {
-    isShareModalOpen: false,
-    selBlockIdxs: [0],
-    selSectionIdx: 0,
+  constructor (props) {
+    super(props)
+    const query = qs.parse(props.location.search, {ignoreQueryPrefix: true})
+    this.state = {
+      isShareModalOpen: false,
+      query,
+      selBlockIdxs: [0],
+      selSectionIdx: parseInt(query.s || 0),
+    }
   }
 
   componentDidMount () {
@@ -120,28 +127,26 @@ class GuidePage extends React.Component<Props, State> {
             <Box p={4}>
               {blocks.length && blocks.map(({body, id, title}, j) => {
                 const isSelected = selBlockIdxs.indexOf(j) !== -1
-                return (
-                  <Div key={id} mb={3}>
-                    <Heading fontSize={4} mb={2}>
-                      <BlockLink
-                        href='javascript:void(0)'
-                        onClick={this.handleBlockTitleClick(j)}
-                      >
-                        <Flex alignItems='center'>
-                          <Checkbox checked={isSelected} readOnly />
-                          <Box flex='1'>{title}</Box>
-                          <TitleArrow direction={isSelected ? 'down' : 'right'} />
-                        </Flex>
-                      </BlockLink>
-                    </Heading>
-                    {!isSelected && <Divider borderColor={BORDER_COLOR} />}
-                    <Div display={isSelected ? 'block' : 'none'}>
-                      <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' pl='22px'>
-                        <Markdown className='raw-content' source={body && body.body} />
-                      </Border>
-                    </Div>
+                return <Div key={id} mb={3}>
+                  <Heading fontSize={4} mb={2}>
+                    <BlockLink
+                      href='javascript:void(0)'
+                      onClick={this.handleBlockTitleClick(j)}
+                    >
+                      <Flex alignItems='center'>
+                        <Checkbox checked={isSelected} readOnly />
+                        <Box flex='1'>{title}</Box>
+                        <TitleArrow direction={isSelected ? 'down' : 'right'} />
+                      </Flex>
+                    </BlockLink>
+                  </Heading>
+                  {!isSelected && <Divider borderColor={BORDER_COLOR} />}
+                  <Div display={isSelected ? 'block' : 'none'}>
+                    <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' pl='22px'>
+                      <Markdown className='raw-content' source={body && body.body} />
+                    </Border>
                   </Div>
-                )
+                </Div>
               })}
             </Box>
           </Box>
@@ -167,6 +172,7 @@ class GuidePage extends React.Component<Props, State> {
       selBlockIdxs: [0],
       selSectionIdx: sectionIdx,
     })
+    navigateTo(`/guide?s=${sectionIdx}`)
   }
 
   handleShareModalClose = () => this.setState({...this.state, isShareModalOpen: false})
