@@ -25,7 +25,6 @@ export const PAGE_WIDTH = 900
 injectGlobal`
   a { text-decoration: none }
   html, body { margin: 0 }
-  html, body, #___gatsby, #___gatsby > div, #___gatsby > div > div { height: 100% }
 
   .sans-2 { font-family: 'Open Sans', sans-serif }
   .serif { font-family: 'Libre Baskerville', serif }
@@ -62,9 +61,9 @@ class Layout extends React.Component<Props, State> {
     return (
       <Provider theme={theme}>
         <AuthContext.Provider value={authContextValue}>
-          <Flex flexDirection='column' justifyContent='space-between'>
+          <Flex flexDirection='column' justifyContent='space-between' style={{minHeight: '100vh'}}>
             <Header />
-            <Box flex='1'>{this.props.children()}</Box>
+            <Flex flex='1' flexDirection='column'>{this.props.children()}</Flex>
             <Footer />
           </Flex>
         </AuthContext.Provider>

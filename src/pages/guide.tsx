@@ -86,12 +86,12 @@ class GuidePage extends React.Component<Props, State> {
     const blocks = activeSection && activeSection.blocks
 
     return (
-      <Box>
+      <Flex flex='1' flexDirection='column'>
         <Meta meta={meta} />
 
         <Hero bgImage={heroDefaultBgImage} buttonAlign='right' handleLinkClick={this.handleShareModalOpen} py={4} {...hero} />
 
-        <Flex flexWrap='wrap'>
+        <Flex flex='1' flexWrap='wrap'>
           <Box bg='purple' color='white' width={[1, 1 / 4]}>
             {sections && sections.map(({id, title}, i) => (
               <Border border='none' borderBottom='1px solid' borderColor='rgba(255,255,255,0.15)' key={id}>
@@ -153,7 +153,7 @@ class GuidePage extends React.Component<Props, State> {
         </Flex>
 
         <ShareModal isOpen={this.state.isShareModalOpen} handleClose={this.handleShareModalClose} />
-      </Box>
+      </Flex>
     )
   }
 
