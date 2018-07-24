@@ -19,8 +19,8 @@ export interface Props {
   py?: any,
 }
 
-const Hero = ({bgImage, buttonAlign, content, title, body, handleLinkClick, linkTitle, linkUrl, py}: Props) => (
-  <Div bg='darkGray' color='white' height='100%' position='relative'>
+const Hero = ({bgImage, buttonAlign, content, fillVertical, title, body, handleLinkClick, linkTitle, linkUrl, py}: Props) => (
+  <Div bg='darkGray' color='white' height={fillVertical && '100%'} position='relative'>
     {bgImage && (
       <GImage
         alt='Background'
