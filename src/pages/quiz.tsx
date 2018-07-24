@@ -42,13 +42,6 @@ interface State {
 }
 
 class QuizPage extends React.Component<Props, State> {
-  static getDerivedStateFromProps (props) {
-    if (props.canViewGuide) {
-      navigateTo('/guide/')
-    }
-    return props
-  }
-
   state = {
     entEmail: '',
     inputEmail: '',
@@ -61,6 +54,7 @@ class QuizPage extends React.Component<Props, State> {
   }
 
   componentDidMount () {
+    this.maybeNavigateToGuide()
     this.setState({
       ...this.state,
       entEmail: getFromLocalStorage(entEmailKey) || '',
@@ -68,6 +62,10 @@ class QuizPage extends React.Component<Props, State> {
       selReligion: getFromLocalStorage(selReligionKey) || '',
       selState: getFromLocalStorage(selStateKey) || '',
     })
+  }
+
+  componentDidUpdate () {
+    this.maybeNavigateToGuide()
   }
 
   render () {
@@ -179,6 +177,12 @@ class QuizPage extends React.Component<Props, State> {
         'Quiz: Religion': this.state.selReligion,
         'Quiz: State': this.state.selState,
       }])
+    }
+  }
+
+  maybeNavigateToGuide = () => {
+    if (this.props.canViewGuide) {
+      navigateTo('/guide/')
     }
   }
 }

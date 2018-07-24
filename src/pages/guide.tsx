@@ -74,9 +74,11 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   componentDidMount () {
-    if (this.props.canViewGuide === false) {
-      navigateTo('/quiz/')
-    }
+    this.maybeNavigateToQuiz()
+  }
+
+  componentDidUpdate () {
+    this.maybeNavigateToQuiz()
   }
 
   render () {
@@ -85,6 +87,12 @@ class GuidePage extends React.Component<Props, State> {
 
     const activeSection = sections[selSectionIdx]
     const blocks = activeSection && activeSection.blocks
+
+    const sectionBgColor = i => {
+      if (i === selSectionIdx) return 'red'
+      if (i === sections.length - 1) return 'lightPurple'
+      return 'purple'
+    }
 
     return (
       <Flex flex='1' flexDirection='column'>
@@ -97,11 +105,7 @@ class GuidePage extends React.Component<Props, State> {
             {sections && sections.map(({id, title}, i) => (
               <Border border='none' borderBottom='1px solid' borderColor='rgba(255,255,255,0.15)' key={id}>
                 <BlockLink
-                  bg={(() => {
-                    if (selSectionIdx === i) return 'red'
-                    if (i === sections.length - 1) return 'lightPurple'
-                    return 'purple'
-                  })()}
+                  bg={sectionBgColor(i)}
                   color='white'
                   href='javascript:void(0)'
                   onClick={this.handleSectionClick(i)}
@@ -180,6 +184,12 @@ class GuidePage extends React.Component<Props, State> {
 
   handleShareModalClose = () => this.setState({...this.state, isShareModalOpen: false})
   handleShareModalOpen = () => this.setState({...this.state, isShareModalOpen: true})
+
+  maybeNavigateToQuiz = () => {
+    if (this.props.canViewGuide === false) {
+      navigateTo('/quiz/')
+    }
+  }
 }
 
 export default props => (
