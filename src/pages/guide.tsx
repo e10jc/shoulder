@@ -8,6 +8,7 @@ import {injectGlobal} from 'styled-components'
 import Hero, {Props as HeroProps} from '../components/hero'
 import Div from '../components/div'
 import Meta from '../components/meta'
+import Chart from '../components/chart'
 import {AuthContext} from '../layouts'
 import ShareModal from '../modals/share'
 
@@ -148,6 +149,8 @@ class GuidePage extends React.Component<Props, State> {
                   </Div>
                 </Div>
               })}
+
+              {selSectionIdx === 4 && <Chart />}
             </Box>
           </Box>
         </Flex>
