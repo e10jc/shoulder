@@ -11,6 +11,7 @@ export interface Props {
   buttonAlign?: string,
   content?: any,
   fillVertical?: boolean,
+  imgPosition?: string,
   title?: string,
   body?: {body: string},
   handleLinkClick?: () => any,
@@ -19,12 +20,12 @@ export interface Props {
   py?: any,
 }
 
-const Hero = ({bgImage, buttonAlign, content, fillVertical, title, body, handleLinkClick, linkTitle, linkUrl, py}: Props) => (
+const Hero = ({bgImage, buttonAlign, content, fillVertical, imgPosition, title, body, handleLinkClick, linkTitle, linkUrl, py}: Props) => (
   <Div bg='darkGray' color='white' height={fillVertical && '100%'} position='relative'>
     {bgImage && (
       <GImage
         alt='Background'
-        imgStyle={{objectPosition: 'center bottom'}}
+        imgStyle={{objectPosition: imgPosition || 'center bottom'}}
         sizes={bgImage.childImageSharp.sizes}
         style={{position: 'absolute', width: '100%', height: '100%'}}
       />

@@ -90,7 +90,7 @@ class GuidePage extends React.Component<Props, State> {
       <Flex flex='1' flexDirection='column'>
         <Meta meta={meta} />
 
-        <Hero bgImage={heroDefaultBgImage} buttonAlign='right' handleLinkClick={this.handleShareModalOpen} py={4} {...hero} />
+        <Hero bgImage={heroDefaultBgImage} buttonAlign='right' handleLinkClick={this.handleShareModalOpen} imgPosition='center center' py={4} {...hero} />
 
         <Flex flex='1' flexWrap='wrap'>
           <Box bg='purple' color='white' width={[1, 1 / 4]}>
