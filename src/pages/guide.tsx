@@ -10,6 +10,7 @@ import Hero, {Props as HeroProps} from '../components/hero'
 import Div from '../components/div'
 import Meta from '../components/meta'
 import Chart from '../components/chart'
+import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
 import {AuthContext} from '../layouts'
 import ShareModal from '../modals/share'
 
@@ -72,22 +73,25 @@ interface Props extends GatsbyProps {
 }
 
 interface State {
+  blocksCompleted: {sIdx?: {bIdx?: boolean}},
   isShareModalOpen: boolean,
   selBlockIdxs: number[],
   selSectionIdx: number,
 }
 
 const BORDER_COLOR = '#f1f1f1'
+const BLOCKS_COMPLETED_KEY = 'guide:completed'
 
 class GuidePage extends React.Component<Props, State> {
   state = {
+    blocksCompleted: {},
     isShareModalOpen: false,
     selBlockIdxs: [],
     selSectionIdx: 0,
   }
 
   componentDidMount () {
-    this.setSectionFromQuery()
+    this.prepareFromBrowser()
     this.maybeNavigateToQuiz()
   }
 
@@ -145,30 +149,38 @@ class GuidePage extends React.Component<Props, State> {
           <Box width={[1, 3 / 4]}>
             <Box p={4}>
               {blocks.length && blocks.map(({body, id, title}, j) => {
+                const isCompleted = this.isBlockCompleted(j)
                 const isSelected = selBlockIdxs.indexOf(j) !== -1
-                return <Div key={id} mb={3}>
+
+                return <Div key={id} mb={3} opacity={isCompleted ? '0.25' : null}>
                   <Heading fontSize={4} mb={2}>
-                    <BlockLink
-                      href='javascript:void(0)'
-                      onClick={this.handleBlockTitleClick(j)}
-                    >
-                      <Flex alignItems='center'>
-                        <Checkbox checked={isSelected} readOnly />
-                        <Box flex='1'>{title}</Box>
-                        <TitleArrow direction={isSelected ? 'down' : 'right'} />
-                      </Flex>
-                    </BlockLink>
+                    <Flex alignItems='center'>
+                      <BlockCheckbox checked={isCompleted} mr={3} onClick={this.handleBlockCheckboxClick(j)} readOnly />
+                      <Box flex='1'>
+                        <BlockLink
+                          href='javascript:void(0)'
+                          onClick={this.handleBlockTitleClick(j)}
+                        >
+                          <Flex alignItems='center' justifyContent='space-between'>
+                            {title}
+                            <TitleArrow direction={isSelected ? 'down' : 'right'} />
+                          </Flex>
+                        </BlockLink>
+                      </Box>                    
+                    </Flex>
                   </Heading>
-                  {!isSelected && <Divider borderColor={BORDER_COLOR} />}
+                  
                   <ReactCSSTransitionGroup
                     transitionName='block'
                     transitionEnterTimeout={500}
                     transitionLeaveTimeout={300}
                   >
-                    {isSelected && <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' key='body' pl='22px'>
+                    {isSelected && <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' key='body' pl='30px'>
                       <Markdown className='raw-content' source={body && body.body} />
                     </Border>}
                   </ReactCSSTransitionGroup>
+
+                  <Divider borderColor={BORDER_COLOR} />
                 </Div>
               })}
 
@@ -180,6 +192,14 @@ class GuidePage extends React.Component<Props, State> {
         <ShareModal isOpen={this.state.isShareModalOpen} handleClose={this.handleShareModalClose} />
       </Flex>
     )
+  }
+  
+  handleBlockCheckboxClick = (blockIdx) => () => {
+    const {blocksCompleted, selSectionIdx} = this.state
+    if (!blocksCompleted[selSectionIdx]) blocksCompleted[selSectionIdx] = {}
+    blocksCompleted[selSectionIdx][blockIdx] = !blocksCompleted[selSectionIdx][blockIdx]
+    this.setState({...this.state, blocksCompleted})
+    setInLocalStorage(BLOCKS_COMPLETED_KEY, JSON.stringify(blocksCompleted))
   }
 
   handleBlockTitleClick = (blockIdx) => () => {
@@ -203,15 +223,28 @@ class GuidePage extends React.Component<Props, State> {
   handleShareModalClose = () => this.setState({...this.state, isShareModalOpen: false})
   handleShareModalOpen = () => this.setState({...this.state, isShareModalOpen: true})
 
+  isBlockCompleted = (blockIdx): boolean => {
+    const {blocksCompleted, selSectionIdx} = this.state
+    if (!blocksCompleted[selSectionIdx]) return false
+    return !!blocksCompleted[selSectionIdx][blockIdx]
+  }
+
   maybeNavigateToQuiz = () => {
     if (this.props.canViewGuide === false) {
       navigateTo('/quiz/')
     }
   }
 
-  setSectionFromQuery = () => {
+  prepareFromBrowser = () => {
+    const state: any = {}
+
+    const blocksCompletedS = getFromLocalStorage(BLOCKS_COMPLETED_KEY)
+    if (blocksCompletedS) state.blocksCompleted = JSON.parse(blocksCompletedS)
+
     const query = qs.parse(this.props.location.search, {ignoreQueryPrefix: true})
-    if (query.s) this.setState({...this.state, selSectionIdx: parseInt(query.s)})
+    if (query.s) state.selSectionIdx = parseInt(query.s)
+
+    this.setState({...this.state, ...state})
   }
 }
 
@@ -252,6 +285,10 @@ export const query = graphql`
       }
     }
   }
+`
+
+const BlockCheckbox = Checkbox.extend`
+  transform: scale(1.4);
 `
 
 const NavContainer = Box.extend`
