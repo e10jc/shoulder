@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "jsx": "react",
+    "lib": ["dom", "es2017"],
     "module": "commonjs",
-    "target": "es2015"
+    "noEmit": true,
+    "strict": true,
+    "target": "esnext"
   }
 }
