@@ -30,7 +30,7 @@ export interface GSection {
   title: string,
 }
 
-interface Props {
+interface Props extends GatsbyProps {
   canViewGuide: boolean,
   data: {
     contentfulGuidePage: {
@@ -54,7 +54,6 @@ interface Props {
 
 interface State {
   isShareModalOpen: boolean,
-  query: object,
   selBlockIdxs: number[],
   selSectionIdx: number,
 }
@@ -62,18 +61,14 @@ interface State {
 const BORDER_COLOR = '#f1f1f1'
 
 class GuidePage extends React.Component<Props, State> {
-  constructor (props) {
-    super(props)
-    const query = qs.parse(props.location.search, {ignoreQueryPrefix: true})
-    this.state = {
-      isShareModalOpen: false,
-      query,
-      selBlockIdxs: [0],
-      selSectionIdx: parseInt(query.s || 0),
-    }
+  state = {
+    isShareModalOpen: false,
+    selBlockIdxs: [0],
+    selSectionIdx: 0,
   }
 
   componentDidMount () {
+    this.setSectionFromQuery()
     this.maybeNavigateToQuiz()
   }
 
@@ -189,6 +184,11 @@ class GuidePage extends React.Component<Props, State> {
     if (this.props.canViewGuide === false) {
       navigateTo('/quiz/')
     }
+  }
+
+  setSectionFromQuery = () => {
+    const query = qs.parse(this.props.location.search, {ignoreQueryPrefix: true})
+    if (query.s) this.setState({...this.state, selSectionIdx: parseInt(query.s)})
   }
 }
 

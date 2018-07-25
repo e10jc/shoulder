@@ -1,5 +1,11 @@
 declare var graphql: (string) => any
 
+interface GatsbyProps {
+  location: {
+    search: string,
+  }
+}
+
 interface GArray<T> {
   edges: {
     node: T,
