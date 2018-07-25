@@ -176,9 +176,9 @@ class GuidePage extends React.Component<Props, State> {
                     timeout={500}
                     unmountOnExit
                   >
-                    {status => <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' key='body' pl='30px'>
+                    <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' key='body' pl='30px'>
                       <Markdown className='raw-content' source={body && body.body} />
-                    </Border>}
+                    </Border>
                   </CSSTransition>
 
                   <Divider borderColor={BORDER_COLOR} />
@@ -298,7 +298,7 @@ const NavContainer = Box.extend`
 
 const TitleArrow = Box.extend`
   &:after {
-    content: ">";
+    content: "\\02192";
     display: block;
     transform: rotate(${(props) => props.direction === 'down' ? '90deg' : '0deg'});
   }
