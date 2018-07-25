@@ -2,6 +2,7 @@ import {navigateTo} from 'gatsby-link'
 import * as qs from 'qs'
 import * as React from 'react'
 import * as Markdown from 'react-markdown'
+import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import {BlockLink, Border, Box, Caps, Checkbox, Container, Divider, Flex, Heading, Text} from 'rebass'
 import {injectGlobal} from 'styled-components'
 
@@ -13,6 +14,24 @@ import {AuthContext} from '../layouts'
 import ShareModal from '../modals/share'
 
 injectGlobal`
+  .block-enter {
+    opacity: 0.01;
+  }
+
+  .block-enter.block-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+  }
+
+  .block-leave {
+    opacity: 1;
+  }
+
+  .block-leave.block-leave-active {
+    opacity: 0.01;
+    transition: opacity 300ms ease-in;
+  }
+
   .raw-content {
     img { max-width: 100% }
   }
@@ -63,7 +82,7 @@ const BORDER_COLOR = '#f1f1f1'
 class GuidePage extends React.Component<Props, State> {
   state = {
     isShareModalOpen: false,
-    selBlockIdxs: [0],
+    selBlockIdxs: [],
     selSectionIdx: 0,
   }
 
@@ -141,11 +160,15 @@ class GuidePage extends React.Component<Props, State> {
                     </BlockLink>
                   </Heading>
                   {!isSelected && <Divider borderColor={BORDER_COLOR} />}
-                  <Div display={isSelected ? 'block' : 'none'}>
-                    <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' pl='22px'>
+                  <ReactCSSTransitionGroup
+                    transitionName='block'
+                    transitionEnterTimeout={500}
+                    transitionLeaveTimeout={300}
+                  >
+                    {isSelected && <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' key='body' pl='22px'>
                       <Markdown className='raw-content' source={body && body.body} />
-                    </Border>
-                  </Div>
+                    </Border>}
+                  </ReactCSSTransitionGroup>
                 </Div>
               })}
 
@@ -171,7 +194,7 @@ class GuidePage extends React.Component<Props, State> {
   handleSectionClick = (sectionIdx) => () => {
     this.setState({
       ...this.state, 
-      selBlockIdxs: [0],
+      selBlockIdxs: [],
       selSectionIdx: sectionIdx,
     })
     navigateTo(`/guide?s=${sectionIdx}`)
