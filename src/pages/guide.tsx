@@ -2,7 +2,7 @@ import {navigateTo} from 'gatsby-link'
 import * as qs from 'qs'
 import * as React from 'react'
 import * as Markdown from 'react-markdown'
-import {CSSTransition} from 'react-transition-group'
+import {CSSTransitionGroup} from 'react-transition-group'
 import {BlockLink, Border, Box, Caps, Checkbox, Container, Divider, Flex, Heading, Text} from 'rebass'
 import {injectGlobal} from 'styled-components'
 
@@ -24,11 +24,11 @@ injectGlobal`
     transition: opacity 500ms ease-in;
   }
 
-  .block-exit {
+  .block-leave {
     opacity: 1;
   }
 
-  .block-exit.block-exit-active {
+  .block-leave.block-leave-active {
     opacity: 0.01;
     transition: opacity 300ms ease-in;
   }
@@ -170,16 +170,15 @@ class GuidePage extends React.Component<Props, State> {
                     </Flex>
                   </Heading>
                   
-                  <CSSTransition
-                    classNames='block'
-                    in={isSelected}
-                    timeout={500}
-                    unmountOnExit
+                  <CSSTransitionGroup
+                    transitionEnterTimeout={300}
+                    transitionLeaveTimeout={300}
+                    transitionName='block'
                   >
-                    <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' key='body' pl='30px'>
+                    {isSelected && <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' key='body' pl='30px'>
                       <Markdown className='raw-content' source={body && body.body} />
-                    </Border>
-                  </CSSTransition>
+                    </Border>}
+                  </CSSTransitionGroup>
 
                   <Divider borderColor={BORDER_COLOR} />
                 </Div>
