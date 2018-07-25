@@ -2,7 +2,7 @@ import {navigateTo} from 'gatsby-link'
 import * as qs from 'qs'
 import * as React from 'react'
 import * as Markdown from 'react-markdown'
-import * as CSSTransition from 'react-transition-group/CSSTransition'
+import {CSSTransition} from 'react-transition-group'
 import {BlockLink, Border, Box, Caps, Checkbox, Container, Divider, Flex, Heading, Text} from 'rebass'
 import {injectGlobal} from 'styled-components'
 
