@@ -3,7 +3,7 @@ import * as qs from 'qs'
 import * as React from 'react'
 import * as Markdown from 'react-markdown'
 import {CSSTransitionGroup} from 'react-transition-group'
-import {BlockLink, Border, Box, Caps, Checkbox, Container, Divider, Flex, Heading, Text} from 'rebass'
+import {BlockLink, Border, Box, ButtonOutline, Caps, Checkbox, Divider, Flex, Heading, Text} from 'rebass'
 import {injectGlobal} from 'styled-components'
 
 import Hero, {Props as HeroProps} from '../components/hero'
@@ -76,17 +76,26 @@ interface State {
   blocksCompleted: {sIdx?: {bIdx?: boolean}},
   isShareModalOpen: boolean,
   selBlockIdxs: number[],
+  selPriGuidIdx: number,
   selSectionIdx: number,
 }
 
 const BORDER_COLOR = '#f1f1f1'
 const BLOCKS_COMPLETED_KEY = 'guide:completed'
+const PRICING_GUIDE_TOPICS = [{
+  title: 'Caskets',
+  data: [625.01, 1000, 1309.32],
+}, {
+  title: 'Cremation',
+  data: [800, 1200, 1500],
+}]
 
 class GuidePage extends React.Component<Props, State> {
   state = {
     blocksCompleted: {},
     isShareModalOpen: false,
     selBlockIdxs: [],
+    selPriGuidIdx: 0,
     selSectionIdx: 0,
   }
 
@@ -101,7 +110,7 @@ class GuidePage extends React.Component<Props, State> {
 
   render () {
     const {data: {contentfulGuidePage: {hero, meta, sections}, heroDefaultBgImage}} = this.props
-    const {selBlockIdxs, selSectionIdx} = this.state
+    const {selBlockIdxs, selPriGuidIdx, selSectionIdx} = this.state
 
     const activeSection = sections[selSectionIdx]
     const blocks = activeSection && activeSection.blocks
@@ -184,7 +193,14 @@ class GuidePage extends React.Component<Props, State> {
                 </Div>
               })}
 
-              {selSectionIdx === 4 && <Chart />}
+              {selSectionIdx === 4 && <Box>
+                <Box mb={3}>
+                  {PRICING_GUIDE_TOPICS.map(({title}, i) => <ButtonOutline color='purple' key={title} mr={1} onClick={this.handlePricingGuideTopicClick(i)}>
+                    {title}
+                  </ButtonOutline>)}
+                </Box>
+                <Chart data={PRICING_GUIDE_TOPICS[selPriGuidIdx].data} key={selPriGuidIdx} />
+              </Box>}
             </Box>
           </Box>
         </Flex>
@@ -209,6 +225,10 @@ class GuidePage extends React.Component<Props, State> {
       ...this.state, 
       selBlockIdxs: idx === -1 ? selBlockIdxs.concat(blockIdx) : selBlockIdxs.filter((_, x) => x !== idx),
     })
+  }
+
+  handlePricingGuideTopicClick = (priGuidIdx) => () => {
+    this.setState({...this.state, selPriGuidIdx: priGuidIdx})
   }
 
   handleSectionClick = (sectionIdx) => () => {

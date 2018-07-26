@@ -1,7 +1,11 @@
 import * as ChartJs from 'chart.js'
 import * as React from 'react'
 
-export default class Chart extends React.Component<{}> {
+interface Props {
+  data: number[],
+}
+
+export default class Chart extends React.Component<Props> {
   canvasRef: any = React.createRef()
 
   componentDidMount () {
@@ -11,7 +15,7 @@ export default class Chart extends React.Component<{}> {
         labels: ['Good Price', 'Average Price', 'Bad Price'],
         datasets: [{
           label: 'Dollars',
-          data: [625.01, 1000, 1309.32],
+          data: this.props.data,
           backgroundColor: [
             '#8CC836',
             '#4B8FE1',
