@@ -1,7 +1,8 @@
 import {navigateTo} from 'gatsby-link'
 import * as React from 'react'
-import {Box, Button, ButtonOutline, Container, Flex, Heading, Input, Label, Select, Text} from 'rebass'
+import {Box, Button, Container, Flex, Heading, Input, Label, Select, Text} from 'rebass'
 
+import ButtonOutline from '../components/button-outline'
 import Hero, {Props as HeroProps} from '../components/hero'
 import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
 import * as states from '../helpers/united-states.json'
@@ -70,7 +71,7 @@ class QuizPage extends React.Component<Props, State> {
 
   render () {
     const {data: {heroDefaultBgImage, recencyHero, recencies: {edges: recencies}, religionHero, religions: {edges: religions}, signupHero, stateHero}} = this.props
-    const {entEmail, selRecency, selReligion, selState} = this.state
+    const {entEmail, recencyInput, religionInput, selRecency, selReligion, selState} = this.state
 
     return (
       <Hero bgImage={heroDefaultBgImage} content={
@@ -108,7 +109,7 @@ class QuizPage extends React.Component<Props, State> {
               <Body>{religionHero.body.body}</Body>
               <Box mb={3}>
                 {religions.map(({node: {name}}) => (
-                  <ButtonOutline color='white' key={name} onClick={this.handleOptionClick('religionInput', name)}>{name}</ButtonOutline>
+                  <ButtonOutline isSelected={religionInput === name} key={name} onClick={this.handleOptionClick('religionInput', name)}>{name}</ButtonOutline>
                 ))}
               </Box>
               <Button>Submit</Button>
@@ -121,7 +122,7 @@ class QuizPage extends React.Component<Props, State> {
               <Body>{recencyHero.body.body}</Body>
               <Box mb={3}>
                 {recencies.map(({node: {name}}) => (
-                  <ButtonOutline key={name} onClick={this.handleOptionClick('recencyInput', name)}>{name}</ButtonOutline>
+                  <ButtonOutline isSelected={recencyInput === name} key={name} onClick={this.handleOptionClick('recencyInput', name)}>{name}</ButtonOutline>
                 ))}
               </Box>
               <Button bg='white' color='purple'>Submit</Button>

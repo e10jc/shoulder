@@ -3,11 +3,12 @@ import * as qs from 'qs'
 import * as React from 'react'
 import * as Markdown from 'react-markdown'
 import {CSSTransitionGroup} from 'react-transition-group'
-import {BlockLink, Border, Box, ButtonOutline, Caps, Checkbox, Divider, Flex, Heading, Text} from 'rebass'
+import {BlockLink, Border, Box, Caps, Checkbox, Divider, Flex, Heading, Text} from 'rebass'
 import {injectGlobal} from 'styled-components'
 
-import Hero, {Props as HeroProps} from '../components/hero'
 import Div from '../components/div'
+import ButtonOutline from '../components/button-outline'
+import Hero, {Props as HeroProps} from '../components/hero'
 import Meta from '../components/meta'
 import Chart from '../components/chart'
 import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
@@ -195,7 +196,7 @@ class GuidePage extends React.Component<Props, State> {
 
               {selSectionIdx === 4 && <Box>
                 <Box mb={3}>
-                  {PRICING_GUIDE_TOPICS.map(({title}, i) => <ButtonOutline color='purple' key={title} mr={1} onClick={this.handlePricingGuideTopicClick(i)}>
+                  {PRICING_GUIDE_TOPICS.map(({title}, i) => <ButtonOutline isSelected={selPriGuidIdx === i} key={title} mr={1} onClick={this.handlePricingGuideTopicClick(i)}>
                     {title}
                   </ButtonOutline>)}
                 </Box>
