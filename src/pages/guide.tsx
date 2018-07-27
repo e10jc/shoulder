@@ -57,6 +57,15 @@ interface Props extends GatsbyProps {
     contentfulGuidePage: {
       hero: HeroProps,
       meta: Meta,
+      pricingGuide: {
+        sections: {
+          averagePrice: number,
+          highPrice: number,
+          id: string,
+          lowPrice: number,
+          title: string,
+        }[],
+      },
       sections: {
         blocks: {
           body: {
@@ -83,13 +92,6 @@ interface State {
 
 const BORDER_COLOR = '#f1f1f1'
 const BLOCKS_COMPLETED_KEY = 'guide:completed'
-const PRICING_GUIDE_TOPICS = [{
-  title: 'Caskets',
-  data: [625.01, 1000, 1309.32],
-}, {
-  title: 'Cremation',
-  data: [800, 1200, 1500],
-}]
 
 class GuidePage extends React.Component<Props, State> {
   state = {
@@ -110,7 +112,7 @@ class GuidePage extends React.Component<Props, State> {
   }
 
   render () {
-    const {data: {contentfulGuidePage: {hero, meta, sections}, heroDefaultBgImage}} = this.props
+    const {data: {contentfulGuidePage: {hero, meta, pricingGuide, sections}, heroDefaultBgImage}} = this.props
     const {selBlockIdxs, selPriGuidIdx, selSectionIdx} = this.state
 
     const activeSection = sections[selSectionIdx]
@@ -196,11 +198,17 @@ class GuidePage extends React.Component<Props, State> {
 
               {selSectionIdx === 4 && <Box>
                 <Box mb={3}>
-                  {PRICING_GUIDE_TOPICS.map(({title}, i) => <ButtonOutline isSelected={selPriGuidIdx === i} key={title} mr={1} onClick={this.handlePricingGuideTopicClick(i)}>
+                  {pricingGuide.sections.map(({id, title}, i) => <ButtonOutline isSelected={selPriGuidIdx === i} key={id} mr={1} onClick={this.handlePricingGuideTopicClick(i)}>
                     {title}
                   </ButtonOutline>)}
                 </Box>
-                <Chart data={PRICING_GUIDE_TOPICS[selPriGuidIdx].data} key={selPriGuidIdx} />
+                <Chart
+                  data={(() => {
+                    const section = pricingGuide.sections[selPriGuidIdx]
+                    return [section.lowPrice, section.averagePrice, section.highPrice]
+                  })()}
+                  key={selPriGuidIdx}
+                />
               </Box>}
             </Box>
           </Box>
@@ -293,6 +301,16 @@ export const query = graphql`
           file {url}
         }
         title
+      }
+
+      pricingGuide {
+        sections {
+          id
+          averagePrice
+          highPrice
+          lowPrice
+          title
+        }
       }
       
       sections {
