@@ -1,6 +1,7 @@
 import React from "react"
 
 import klaviyo from './helpers/klaviyo'
+import olark from './helpers/olark'
 
 let stylesStr
 if (process.env.NODE_ENV === `production`) {
@@ -44,6 +45,7 @@ module.exports = class HTML extends React.Component {
           />
           {this.props.postBodyComponents}
           <script dangerouslySetInnerHTML={{__html: klaviyo}} />
+          <script type='text/javascript' async dangerouslySetInnerHTML={{__html: olark}} />
         </body>
       </html>
     )
