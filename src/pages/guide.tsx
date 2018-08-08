@@ -11,8 +11,8 @@ import ButtonOutline from '../components/button-outline'
 import Hero, {Props as HeroProps} from '../components/hero'
 import Meta from '../components/meta'
 import Chart from '../components/chart'
+import Layout, {AuthContext} from '../components/layout'
 import {get as getFromLocalStorage, set as setInLocalStorage} from '../helpers/local-storage'
-import {AuthContext} from '../layouts'
 import ShareModal from '../modals/share'
 
 injectGlobal`
@@ -125,97 +125,99 @@ class GuidePage extends React.Component<Props, State> {
     }
 
     return (
-      <Flex flex='1' flexDirection='column'>
-        <Meta meta={meta} />
+      <Layout>
+        <Flex flex='1' flexDirection='column'>
+          <Meta meta={meta} />
 
-        <Hero bgImage={heroDefaultBgImage} buttonAlign='right' handleLinkClick={this.handleShareModalOpen} imgPosition='center center' py={4} {...hero} />
+          <Hero bgImage={heroDefaultBgImage} buttonAlign='right' handleLinkClick={this.handleShareModalOpen} imgPosition='center center' py={4} {...hero} />
 
-        <Flex flex='1' flexWrap='wrap'>
-          <Box bg='purple' color='white' width={[1, 1 / 4]}>
-            {sections && sections.map(({id, title}, i) => (
-              <Border border='none' borderBottom='1px solid' borderColor='rgba(255,255,255,0.15)' key={id}>
-                <BlockLink
-                  bg={sectionBgColor(i)}
-                  color='white'
-                  href='javascript:void(0)'
-                  onClick={this.handleSectionClick(i)}
-                  px={3}
-                  py={4}
-                >
-                  {(() => {
-                    switch (i) {
-                      case 0: return <Caps fontWeight='bold'>Timeline</Caps>
-                      case sections.length - 1: return <Caps fontWeight='bold'>Pricing Guide</Caps>
-                      default: return (
-                        <Text>
-                          <Div display='inline' pr={2} style={{opacity: '0.25'}}>{i}</Div> {title}
-                        </Text>
-                      )
-                    }
-                  })()}
-                </BlockLink>
-              </Border>
-            ))}
-          </Box>
-
-          <Box width={[1, 3 / 4]}>
-            <Box p={4}>
-              {blocks.length && blocks.map(({body, id, title}, j) => {
-                const isCompleted = this.isBlockCompleted(j)
-                const isSelected = selBlockIdxs.indexOf(j) !== -1
-
-                return <Div key={id} mb={3} opacity={isCompleted ? '0.25' : null}>
-                  <Heading fontSize={4} mb={2}>
-                    <Flex alignItems='center'>
-                      <BlockCheckbox checked={isCompleted} mr={3} onClick={this.handleBlockCheckboxClick(j)} readOnly />
-                      <Box flex='1'>
-                        <BlockLink
-                          href='javascript:void(0)'
-                          onClick={this.handleBlockTitleClick(j)}
-                        >
-                          <Flex alignItems='center' justifyContent='space-between'>
-                            {title}
-                            <TitleArrow direction={isSelected ? 'down' : 'right'} />
-                          </Flex>
-                        </BlockLink>
-                      </Box>                    
-                    </Flex>
-                  </Heading>
-                  
-                  <CSSTransitionGroup
-                    transitionEnterTimeout={300}
-                    transitionLeaveTimeout={300}
-                    transitionName='block'
+          <Flex flex='1' flexWrap='wrap'>
+            <Box bg='purple' color='white' width={[1, 1 / 4]}>
+              {sections && sections.map(({id, title}, i) => (
+                <Border border='none' borderBottom='1px solid' borderColor='rgba(255,255,255,0.15)' key={id}>
+                  <BlockLink
+                    bg={sectionBgColor(i)}
+                    color='white'
+                    href='javascript:void(0)'
+                    onClick={this.handleSectionClick(i)}
+                    px={3}
+                    py={4}
                   >
-                    {isSelected && <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' key='body' pl='30px'>
-                      <Markdown className='raw-content' source={body && body.body} />
-                    </Border>}
-                  </CSSTransitionGroup>
-
-                  <Divider borderColor={BORDER_COLOR} />
-                </Div>
-              })}
-
-              {selSectionIdx === 4 && <Box>
-                <Box mb={3}>
-                  {pricingGuide.sections.map(({id, title}, i) => <ButtonOutline isSelected={selPriGuidIdx === i} key={id} mr={1} onClick={this.handlePricingGuideTopicClick(i)}>
-                    {title}
-                  </ButtonOutline>)}
-                </Box>
-                <Chart
-                  data={(() => {
-                    const section = pricingGuide.sections[selPriGuidIdx]
-                    return [section.lowPrice, section.averagePrice, section.highPrice]
-                  })()}
-                  key={selPriGuidIdx}
-                />
-              </Box>}
+                    {(() => {
+                      switch (i) {
+                        case 0: return <Caps fontWeight='bold'>Timeline</Caps>
+                        case sections.length - 1: return <Caps fontWeight='bold'>Pricing Guide</Caps>
+                        default: return (
+                          <Text>
+                            <Div display='inline' pr={2} style={{opacity: '0.25'}}>{i}</Div> {title}
+                          </Text>
+                        )
+                      }
+                    })()}
+                  </BlockLink>
+                </Border>
+              ))}
             </Box>
-          </Box>
-        </Flex>
 
-        <ShareModal isOpen={this.state.isShareModalOpen} handleClose={this.handleShareModalClose} />
-      </Flex>
+            <Box width={[1, 3 / 4]}>
+              <Box p={4}>
+                {blocks.length && blocks.map(({body, id, title}, j) => {
+                  const isCompleted = this.isBlockCompleted(j)
+                  const isSelected = selBlockIdxs.indexOf(j) !== -1
+
+                  return <Div key={id} mb={3} opacity={isCompleted ? '0.25' : null}>
+                    <Heading fontSize={4} mb={2}>
+                      <Flex alignItems='center'>
+                        <BlockCheckbox checked={isCompleted} mr={3} onClick={this.handleBlockCheckboxClick(j)} readOnly />
+                        <Box flex='1'>
+                          <BlockLink
+                            href='javascript:void(0)'
+                            onClick={this.handleBlockTitleClick(j)}
+                          >
+                            <Flex alignItems='center' justifyContent='space-between'>
+                              {title}
+                              <TitleArrow direction={isSelected ? 'down' : 'right'} />
+                            </Flex>
+                          </BlockLink>
+                        </Box>                    
+                      </Flex>
+                    </Heading>
+                    
+                    <CSSTransitionGroup
+                      transitionEnterTimeout={300}
+                      transitionLeaveTimeout={300}
+                      transitionName='block'
+                    >
+                      {isSelected && <Border border='none' borderColor={BORDER_COLOR} borderLeft='1px solid' key='body' pl='30px'>
+                        <Markdown className='raw-content' source={body && body.body} />
+                      </Border>}
+                    </CSSTransitionGroup>
+
+                    <Divider borderColor={BORDER_COLOR} />
+                  </Div>
+                })}
+
+                {selSectionIdx === 4 && <Box>
+                  <Box mb={3}>
+                    {pricingGuide.sections.map(({id, title}, i) => <ButtonOutline isSelected={selPriGuidIdx === i} key={id} mr={1} onClick={this.handlePricingGuideTopicClick(i)}>
+                      {title}
+                    </ButtonOutline>)}
+                  </Box>
+                  <Chart
+                    data={(() => {
+                      const section = pricingGuide.sections[selPriGuidIdx]
+                      return [section.lowPrice, section.averagePrice, section.highPrice]
+                    })()}
+                    key={selPriGuidIdx}
+                  />
+                </Box>}
+              </Box>
+            </Box>
+          </Flex>
+
+          <ShareModal isOpen={this.state.isShareModalOpen} handleClose={this.handleShareModalClose} />
+        </Flex>
+      </Layout>
     )
   }
   

@@ -24,6 +24,7 @@ export const PAGE_WIDTH = 900
 
 injectGlobal`
   a { text-decoration: none }
+  button:hover { cursor: pointer }
   html, body { margin: 0 }
 
   .sans-2 { font-family: 'Open Sans', sans-serif }
@@ -33,9 +34,16 @@ injectGlobal`
   .yellow { color: ${theme.colors.yellow} }
 `
 
-export const AuthContext = React.createContext(null)
+export const AuthContext = React.createContext({
+  canViewGuide: null,
+  initAuth: null,
+})
 
-interface Props {children: any}
+interface Props {
+  children: any,
+  hideFooter?: boolean,
+  hideHeader?: boolean,
+}
 
 interface State {
   canViewGuide: boolean,
@@ -62,9 +70,9 @@ class Layout extends React.Component<Props, State> {
       <Provider theme={theme}>
         <AuthContext.Provider value={authContextValue}>
           <Flex flexDirection='column' justifyContent='space-between' style={{minHeight: '100vh'}}>
-            <Header />
-            <Flex flex='1' flexDirection='column'>{this.props.children()}</Flex>
-            <Footer />
+            {!this.props.hideHeader && <Header />}
+            <Flex flex='1' flexDirection='column'>{this.props.children}</Flex>
+            {!this.props.hideFooter && <Footer />}
           </Flex>
         </AuthContext.Provider>
       </Provider>

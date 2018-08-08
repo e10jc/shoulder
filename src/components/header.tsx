@@ -2,8 +2,8 @@ import Link, {navigateTo} from 'gatsby-link'
 import * as React from 'react'
 import {Box, Drawer, Flex, Heading, Text} from 'rebass'
 
-import {AuthContext} from '../layouts/index'
 import Div from './div'
+import {AuthContext} from './layout'
 
 interface Props {
   canViewGuide: boolean,

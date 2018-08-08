@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {ButtonOutline} from 'rebass'
 
-import {theme} from '../layouts'
+import {theme} from './layout'
 
 export default (props: any) => {
   const {isSelected} = props

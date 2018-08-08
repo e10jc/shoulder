@@ -1,141 +1,59 @@
-import GImage from 'gatsby-image'
 import * as React from 'react'
-import {Box, Container, Flex, Heading, Image} from 'rebass'
+import {Box, Button, Fixed, Heading, Text} from 'rebass'
 
-import Callout from '../components/callout'
-import Hero, {Props as HeroProps} from '../components/hero'
 import Meta from '../components/meta'
-import Testimonial from '../components/testimonial'
-import {PAGE_WIDTH} from '../layouts'
+import Layout from '../components/layout'
 
 interface Props {
   data: {
-    contentfulHomePage: {
-      callouts: {
-        body: {body: string},
-        icon: {
-          file: {url: string},
-          title: string,
-        },
-        title: string,
-      }[],
-      hero: HeroProps,
-      heroImage: {
-        file: {url: string},
-        title: string,
-      },
-      lede: {
-        lede: string,
-      },
+    bgImage: any,
+    contentfulPreLaunchPage: {
+      body: {body: string},
+      lead: {lead: string},
       meta: Meta,
-      testimonials: {
-        body: {body: string},
-        name: string,
-        photo: {
-          file: {url: string},
-          title: string,
-        },
-      }[],
     },
-    dotsImage: any,
-    heroDefaultBgImage: any,
   }
 }
 
-const HomePage = ({
+const PreLaunchPage = ({
   data: {
-    contentfulHomePage: {
-      callouts,
+    bgImage,
+    contentfulPreLaunchPage: {
+      body: {body},
+      lead: {lead},
       meta,
-      hero,
-      heroImage,
-      lede: {lede},
-      testimonials,
     }, 
-    dotsImage, 
-    heroDefaultBgImage, 
   }
 }: Props) => (
-  <Box>
-    <Meta meta={meta} />
+  <Layout hideFooter hideHeader>
+    <Wrapper color='white' style={{backgroundImage: `url(${bgImage.childImageSharp.sizes.src})`}}>
+      <Meta meta={meta} />
 
-    <Hero bgImage={heroDefaultBgImage} {...hero} />
-    <Box>
-      <Container maxWidth={PAGE_WIDTH}>
-        <Box mx='auto' width={['100%', '75%']}>
-          <Heading className='serif' dangerouslySetInnerHTML={{__html: lede}} my={4} textAlign='center' />
-        </Box>
-
-        <Box mx='auto' my={4} width='50px'>
-          <GImage
-            alt='Dots'
-            sizes={dotsImage.childImageSharp.sizes}
-          />
-        </Box>
-
-        <Flex flexWrap='wrap' mb={4} mx={-3}>
-          {callouts && callouts.map(({body: {body}, icon: {file: {url: src}, title: alt}, title}) => (
-            <Box key={title} mb={3} mx='auto' px={3} width={[1, 1 / 3]}>
-              <Callout body={body} image={{alt, src}} title={title} />
-            </Box>
-          ))}
-        </Flex>
-
-        <Image alt={heroImage.title} mb={4} src={heroImage.file.url} />
-      </Container>
-
-      <Box bg='darkWhite' pt={4}>
-        <Container maxWidth={PAGE_WIDTH}>
-          <Flex flexWrap='wrap' mx={-2}>
-            {testimonials.map(({body: {body}, name, photo: {file: {url: src}, title: alt}}) => (
-              <Box key={name} mb={3} px={2} width={[1, 1 / 3]}>
-                <Testimonial body={body} image={{alt, src}} name={name} />
-              </Box>
-            ))}
-          </Flex>
-        </Container>
+      <Box mt={[5, 6]} px={3}>
+        <Heading className='serif' fontSize={[6, 7]} mb={3}>Shoulder</Heading>
+        <Heading fontSize={[2, 3]} mb={4}>{lead}</Heading>
+        <Text mb={4} mx='auto' style={{maxWidth: '500px'}}>{body}</Text>
+        <Button bg='lightPurple' borderRadius='20px' onClick={() => window.location.href = 'mailto:alex@shoulder.com'} px={3}>Contact us</Button>
       </Box>
-    </Box>
-  </Box>
+    </Wrapper>
+  </Layout>
 )
 
-export default HomePage
+export default PreLaunchPage
 
 export const query = graphql`
-  query homePageQuery {
-    ...heroDefaultBgImage
-
-    dotsImage: file (relativePath: {eq: "dots.png"}) {
+  query preLaunchPageQuery {
+    bgImage: file (relativePath: {eq: "hero-bg.jpg"}) {
       childImageSharp {
-        sizes(maxWidth: 50) {
-          ...GatsbyImageSharpSizes
+        sizes(maxWidth: 2400) {
+          src
         }
       }
     }
 
-    contentfulHomePage (contentful_id: {eq: "5dToGykxfUYqegYUsQK2qy"}) {
-      callouts {
-        icon {
-          title
-          file {url}
-        }
-        body {body}
-        title
-      }
-
-      hero {
-        title
-        body {body}
-        linkUrl
-        linkTitle
-      }
-  
-      heroImage {
-        title
-        file {url}
-      }
-  
-      lede {lede}
+    contentfulPreLaunchPage (contentful_id: {eq: "6U1oJ8iYVyGIUGSA26wIWg"}) {
+      body {body}
+      lead {lead}
   
       meta {
         description
@@ -144,16 +62,18 @@ export const query = graphql`
           file {url}
         }
         title
-      }
-  
-      testimonials {
-        body {body}
-        name
-        photo {
-          title
-          file {url}
-        }
-      }
+      }  
     }
   }`
   
+  const Wrapper = Fixed.extend`
+    background-position: center bottom;
+    background-size: cover;
+    bottom: 0;
+    display: flex;
+    left: 0;
+    justify-content: center;
+    right: 0;
+    text-align: center;
+    top: 0;
+  `

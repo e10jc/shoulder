@@ -1,8 +1,10 @@
 import * as React from 'react'
-import {Box} from 'rebass'
+import {Text} from 'rebass'
+
+import Layout from '../components/layout'
 
 export default () => (
-  <Box>
-    this is the about
-  </Box>
+  <Layout>
+    <Text>this is the about</Text>
+  </Layout>
 )

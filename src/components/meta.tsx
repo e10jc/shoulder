@@ -5,7 +5,7 @@ interface Props {
   meta: Meta,
 }
 
-export default ({meta}: Props) => (
+const Meta = ({meta}: Props) => (
   <Helmet>
     <title>{meta.title}</title>
     <meta name='description' content={meta.description} />
@@ -14,3 +14,5 @@ export default ({meta}: Props) => (
     <meta property='og:image' content={meta.image.file.url} />
   </Helmet>
 )
+
+export default Meta

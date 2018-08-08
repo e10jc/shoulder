@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Box, Button, Container, Flex, Heading, Text} from 'rebass'
 
 import Div from './div'
-import {PAGE_WIDTH} from '../layouts'
+import {PAGE_WIDTH} from './layout'
 
 export interface Props {
   bgImage?: any,
